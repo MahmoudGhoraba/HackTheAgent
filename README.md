@@ -13,6 +13,8 @@ Backend implemented in FastAPI with modular agents for Gmail/Outlook ingestion, 
 
 ## Run locally
 
+### Backend (FastAPI)
+
 Requires Python 3.12 and the workspace virtual environment (already set up). Start the API:
 
 ```bash
@@ -21,6 +23,26 @@ Requires Python 3.12 and the workspace virtual environment (already set up). Sta
 ```
 
 Open http://127.0.0.1:8000/docs for interactive Swagger UI.
+
+### Frontend (Next.js + NextAuth + Tailwind)
+
+The frontend lives in `frontend/` and uses Next.js 13 (pages router) for easier Tailwind integration.
+
+1. Copy `.env.example` to `.env.local` and fill in the OAuth secrets:
+
+```bash
+cp frontend/.env.example frontend/.env.local
+```
+
+2. Install dependencies and run dev server:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Navigate to http://localhost:3000 and use the login page to sign in with Google or Microsoft.
 
 ## Endpoints
 
@@ -66,3 +88,4 @@ This demo simulates orchestration by calling platform agents inside `query.py`. 
 - Persist messages and preferences (PostgreSQL or MongoDB).
 - Improve summarization using an LLM (or distilbart/PEGASUS) with caching.
 - Add React dashboard to visualize messages, filters, and summaries.
+ - Wire the Next.js frontend to the FastAPI backend (`/ingest`, `/query`) and show summaries.
