@@ -1,64 +1,21 @@
+# app/main.py
 from fastapi import FastAPI
-from app.gmail import fetch_gmail
-from app.outlook import fetch_outlook
-from app.normalize import normalize_messages
-from app.query import handle_query
+from .orchestrator import call_workflow
 
-app = FastAPI(title="HackTheAgent Backend (Mock Demo)", version="1.0.0")
+app = FastAPI(title="HackTheAgent Backend")
 
-# ----------------------------
-# Root endpoint
-# ----------------------------
 @app.get("/")
 def root():
-    return {
-        "status": "HackTheAgent backend skeleton running",
-        "agents": [
-            "Gmail Agent",
-            "Outlook Agent",
-            "Ingestion/Normalization Agent",
-            "Query / Summary Agent"
-        ]
-    }
+    return {"status": "HackTheAgent backend running"}
 
-# ----------------------------
-# Gmail Agent Tool
-# ----------------------------
-@app.get("/gmail/fetch")
-def gmail_fetch():
-    messages = fetch_gmail()
-    return {"messages": messages}
+@app.get("/fetch-messages")
+def fetch_messages():
+    """Fetch merged emails from Orchestrator workflow"""
+    result = call_workflow(action="fetch_messages")
+    return {"messages": result.get("merged_messages", [])}
 
-# ----------------------------
-# Outlook Agent Tool
-# ----------------------------
-@app.get("/outlook/fetch")
-def outlook_fetch():
-    messages = fetch_outlook()
-    return {"messages": messages}
-
-# ----------------------------
-# Ingestion / Normalization Agent Tool
-# ----------------------------
-@app.get("/ingest")
-def ingest():
-    gmail_data = fetch_gmail()
-    outlook_data = fetch_outlook()
-    merged = gmail_data + outlook_data
-    normalized = normalize_messages(merged)
-    return {"normalized_messages": normalized}
-
-# ----------------------------
-# Query / Summary Agent Tool
-# ----------------------------
 @app.post("/query")
 def query(payload: dict):
-    """
-    Expected payload format:
-    {
-        "query": "internship",
-        "messages": [ ... normalized messages ... ]
-    }
-    """
-    result = handle_query(payload)
+    """Query messages via Orchestrator workflow"""
+    result = call_workflow(action="query", payload=payload)
     return result
