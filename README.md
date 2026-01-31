@@ -2,14 +2,14 @@
 
 Backend implemented in FastAPI with modular agents for Gmail/Outlook ingestion, normalization, and query/summarization.
 
-## What’s inside
+## What's inside
 
 - `backend/app/main.py` – FastAPI app with endpoints
-- `backend/app/gmail.py` – Gmail connector (demo stub)
-- `backend/app/outlook.py` – Outlook connector (demo stub)
-- `backend/app/normalize.py` – Normalization into a common message schema
-- `backend/app/query.py` – Orchestrated query + summarization logic
-- `backend/app/models.py` – Pydantic models for message and query types
+- `backend/app/gmail_agent.py` – **Gmail Agent with 4 tools (list, read, send, search)**
+- `backend/app/orchestrator.py` – Watson Orchestrate integration
+- `backend/app/config.py` – Configuration for Watson Orchestrate
+- `backend/gmail_agent_openapi.yaml` – OpenAPI specification for Gmail agent
+- `backend/GMAIL_AGENT_SETUP.md` – **Complete setup guide for Gmail agent**
 
 ## Run locally
 
@@ -71,15 +71,74 @@ Notes:
 - `since`/`until`: ISO timestamps
 - `summarize`: return a compact aggregate summary
 
+## Gmail Agent
+
+A fully functional Gmail agent with Watson Orchestrate integration is now available!
+
+### Features
+
+✅ **4 Core Tools:**
+- `list_emails` - List emails with pagination and filtering
+- `read_email_details` - Get full email content by ID
+- `send_email` - Send emails with cc/bcc support
+- `search_emails` - Advanced search with multiple filters
+
+✅ **Watson Orchestrate Integration:**
+- Register agent via `/gmail/register` endpoint
+- Use in workflows and automation
+- OpenAPI specification included
+
+✅ **Complete Documentation:**
+- See `backend/GMAIL_AGENT_SETUP.md` for detailed setup instructions
+- Includes Gmail API setup, authentication, and usage examples
+
+### Quick Start
+
+1. **Set up Gmail API credentials** (see `GMAIL_AGENT_SETUP.md`)
+2. **Install dependencies:**
+   ```bash
+   pip install -r backend/requirements.txt
+   ```
+3. **Start the server:**
+   ```bash
+   uvicorn backend.app.main:app --reload --port 8000
+   ```
+4. **Test the agent:**
+   ```bash
+   curl "http://localhost:8000/gmail/list?max_results=5"
+   ```
+5. **Register with Watson Orchestrate:**
+   ```bash
+   curl -X POST "http://localhost:8000/gmail/register"
+   ```
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/gmail/list` | List emails with pagination |
+| GET | `/gmail/read/{email_id}` | Read full email details |
+| POST | `/gmail/send` | Send a new email |
+| POST | `/gmail/search` | Search emails with filters |
+| POST | `/gmail/register` | Register with Watson Orchestrate |
+
+### OpenAPI Specification
+
+The complete OpenAPI spec is available at `backend/gmail_agent_openapi.yaml` for Watson Orchestrate integration.
+
 ## Orchestration
 
-This demo simulates orchestration by calling platform agents inside `query.py`. For hackathon judging, you can map these steps in watsonx Orchestrate:
+The Gmail agent integrates seamlessly with Watson Orchestrate:
 
-1. Detect intent (e.g., "Show me emails about job applications from IBM").
-2. Call Gmail/Outlook agents with appropriate filters.
-3. Normalize with `Normalization Agent`.
-4. Query/summarize with `Query Agent`.
-5. Return messages + summary to the UI.
+1. **Detect intent** (e.g., "Show me unread emails from my boss")
+2. **Call Gmail Agent** with appropriate filters
+3. **Process results** with Watson Orchestrate workflows
+4. **Return formatted response** to the user
+
+Example workflow:
+```
+User → Watson Orchestrate → Gmail Agent → Gmail API → Results → User
+```
 
 ## Next steps
 
