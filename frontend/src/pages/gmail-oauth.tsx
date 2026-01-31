@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Layout from '@/components/Layout';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import Alert from '@/components/Alert';
@@ -148,12 +147,11 @@ export default function GmailOAuthPage() {
   };
 
   return (
-    <Layout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Gmail OAuth Integration</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Gmail Connection</h1>
           <p className="mt-2 text-gray-600">
-            Connect your Gmail account to fetch and analyze emails
+            Connect your Gmail account to use real emails with the AI agent
           </p>
         </div>
 
@@ -353,6 +351,5 @@ GMAIL_REDIRECT_URI=http://localhost:3000/gmail-oauth`}
           </div>
         </Card>
       </div>
-    </Layout>
   );
 }

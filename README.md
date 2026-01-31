@@ -1,9 +1,10 @@
 # HackTheAgent: Email Brain 🧠
 
-**A multi-agent semantic search and RAG system for emails using watsonx Orchestrate**
+**A multi-agent semantic search and RAG system for emails with Gmail integration and interactive AI agent**
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.109.0-009688.svg)](https://fastapi.tiangolo.com)
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB.svg)](https://www.python.org)
+[![Next.js](https://img.shields.io/badge/Next.js-13.5-000000.svg)](https://nextjs.org)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://www.docker.com)
 [![watsonx](https://img.shields.io/badge/watsonx-Orchestrate-BE95FF.svg)](https://www.ibm.com/watsonx)
 
@@ -11,15 +12,18 @@
 
 ## 🎯 What Makes This Special?
 
-HackTheAgent transforms your inbox into **semantic memory**. Instead of keyword search, it understands **meaning**. Instead of reading dozens of emails, you ask questions and get **grounded answers with citations**.
+HackTheAgent transforms your inbox into **semantic memory** with an **intelligent AI agent interface**. Instead of keyword search, it understands **meaning**. Instead of reading dozens of emails, you ask questions in natural language and get **grounded answers with citations**.
 
 ### Key Innovations
 
-1. **Semantic Search** - Find emails by meaning, not just keywords
-2. **RAG with Citations** - AI answers grounded in actual email content
-3. **Multi-Agent Orchestration** - Clear separation of concerns using watsonx Orchestrate
-4. **Privacy-First** - No OAuth required, works with local dataset
-5. **Production-Ready** - Docker deployment, cloud-ready architecture
+1. **🤖 Interactive AI Agent** - Natural language interface that understands your intent
+2. **🔍 Semantic Search** - Find emails by meaning, not just keywords
+3. **💬 RAG with Citations** - AI answers grounded in actual email content
+4. **📧 Gmail Integration** - Real-time OAuth2 connection to your Gmail account
+5. **🎨 Modern Web UI** - Beautiful Next.js frontend with real-time workflow visualization
+6. **🏷️ Smart Classification** - Automatic email categorization and priority detection
+7. **📊 Analytics Dashboard** - Comprehensive insights into your email patterns
+8. **🔒 Privacy-First** - Works with local dataset or your own Gmail account
 
 ---
 
@@ -27,69 +31,59 @@ HackTheAgent transforms your inbox into **semantic memory**. Instead of keyword 
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    watsonx Orchestrate                       │
+│                    Next.js Frontend (Port 3000)              │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │              Supervisor Agent                         │  │
-│  │  (Orchestrates workflow, interacts with user)        │  │
+│  │  🤖 AI Agent Chat    📧 Gmail OAuth    📊 Analytics  │  │
+│  │  Interactive workflow visualization & natural language│  │
 │  └────────────┬─────────────────────────────────────────┘  │
-│               │                                              │
-│       ┌───────┴────────┬──────────┬──────────┬──────────┐  │
-│       ▼                ▼          ▼          ▼          ▼  │
-│  ┌─────────┐  ┌──────────────┐  ┌────────┐  ┌────────┐   │
-│  │Ingestion│  │Normalization │  │Indexing│  │ Search │   │
-│  │ Agent   │  │    Agent     │  │ Agent  │  │ Agent  │   │
-│  └────┬────┘  └──────┬───────┘  └───┬────┘  └───┬────┘   │
-│       │              │               │           │         │
-│       │              │               │           │         │
-│  ┌────┴──────────────┴───────────────┴───────────┴─────┐  │
-│  │              RAG Answer Agent                        │  │
-│  │  (Retrieves context + generates grounded answers)   │  │
-│  └──────────────────────┬───────────────────────────────┘  │
-└─────────────────────────┼───────────────────────────────────┘
-                          │
-                          ▼
-              ┌───────────────────────┐
-              │   FastAPI Tool Server │
-              │  (Backend API)        │
-              └───────────┬───────────┘
-                          │
-        ┌─────────────────┼─────────────────┐
-        ▼                 ▼                 ▼
-   ┌─────────┐    ┌──────────────┐   ┌─────────┐
-   │ Emails  │    │ Vector Store │   │   LLM   │
-   │  JSON   │    │   (Chroma)   │   │(watsonx)│
-   └─────────┘    └──────────────┘   └─────────┘
+└───────────────┼──────────────────────────────────────────────┘
+                │ REST API (HTTP)
+                │
+┌───────────────▼──────────────────────────────────────────────┐
+│              FastAPI Backend (Port 8000)                      │
+│  ┌──────────────────────────────────────────────────────┐  │
+│  │  Email Tools | Semantic Search | RAG | Classification│  │
+│  │  Gmail OAuth | Analytics | Caching | Threading       │  │
+│  └────────────┬─────────────────────────────────────────┘  │
+└───────────────┼──────────────────────────────────────────────┘
+                │
+         ┌──────┴──────┬──────────────┬──────────────┐
+         ▼             ▼              ▼              ▼
+    ┌─────────┐  ┌──────────┐  ┌─────────┐  ┌──────────┐
+    │ Gmail   │  │  Vector  │  │   LLM   │  │  Redis   │
+    │  API    │  │  Store   │  │(watsonx)│  │  Cache   │
+    │         │  │ (Chroma) │  │Optional │  │ Optional │
+    └─────────┘  └──────────┘  └─────────┘  └──────────┘
 ```
 
 ---
 
-## 🚀 Quick Start (< 10 minutes)
+## 🚀 Quick Start (< 5 minutes)
 
 ### Prerequisites
 
 - Python 3.11+
-- Docker & Docker Compose (optional, for containerized deployment)
-- watsonx Orchestrate account (for agent orchestration)
+- Node.js 18+ and npm
+- Docker & Docker Compose (optional)
+- Gmail account (optional, for real email integration)
 
-### Option 1: Local Development (Backend + Frontend)
+### Option 1: Local Development (Recommended)
 
 #### Backend Setup
 ```bash
-# 1. Clone the repository
-git clone <repository-url>
-cd HackTheAgent
-
-# 2. Set up Python environment
+# 1. Clone and navigate to backend
 cd backend
+
+# 2. Create virtual environment
 python -m venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Configure environment (optional - works without LLM)
+# 4. Configure environment (optional)
 cp .env.example .env
-# Edit .env and add your watsonx credentials if you have them
+# Edit .env to add your watsonx credentials (optional)
 
 # 5. Run the backend server
 uvicorn app.main:app --reload
@@ -110,55 +104,175 @@ npm run dev
 ```
 
 #### Access the Application
-- **Frontend UI**: http://localhost:3000
-- **Backend API Docs**: http://localhost:8000/docs
+- **🤖 AI Agent Interface**: http://localhost:3000/ai-agent
+- **📧 Gmail OAuth Setup**: http://localhost:3000/gmail-oauth
+- **📊 Analytics Dashboard**: http://localhost:3000/analytics
+- **📚 Backend API Docs**: http://localhost:8000/docs
 
 ### Option 2: Docker Deployment
 
 ```bash
-# 1. Clone the repository
-git clone <repository-url>
-cd HackTheAgent
-
-# 2. Configure environment (optional)
+# 1. Configure environment
 cp backend/.env.example backend/.env
-# Edit backend/.env if you have watsonx credentials
+# Edit backend/.env if you have credentials
 
-# 3. Build and run
+# 2. Build and run
 docker-compose up --build
 
-# 4. Test the API
-open http://localhost:8000/docs
+# 3. Access the application
+open http://localhost:3000
 ```
+
+---
+
+## 🎨 Features
+
+### 1. Interactive AI Agent 🤖
+
+**Natural Language Interface** - Just ask questions in plain English:
+- "What are my most recent emails about?"
+- "Find emails about meetings"
+- "Summarize my unread emails"
+- "Who sends me the most emails?"
+- "Organize my emails by category"
+
+**Intelligent Workflow Execution**:
+- Automatically loads emails when needed
+- Shows real-time workflow steps
+- Provides detailed results with citations
+- Handles errors gracefully
+
+### 2. Gmail Integration 📧
+
+**OAuth2 Authentication**:
+- Secure Google OAuth flow
+- One-click Gmail connection
+- Automatic token refresh
+- Easy revocation
+
+**Real-time Email Fetching**:
+- Fetch emails directly from Gmail
+- Support for Gmail search queries
+- Configurable result limits
+- Label and metadata extraction
+
+### 3. Semantic Search 🔍
+
+**Meaning-Based Search**:
+- Uses Sentence Transformers (all-MiniLM-L6-v2)
+- Understands context and intent
+- Returns similarity scores
+- Fast: < 2 seconds per query
+
+**Smart Features**:
+- Automatic email loading
+- Persistent vector storage
+- Efficient chunking strategy
+- Relevance ranking
+
+### 4. RAG with Citations 💬
+
+**Grounded Answers**:
+- Retrieves relevant email context
+- Generates answers using LLM
+- Provides source citations
+- No hallucination - only uses retrieved content
+
+**Fallback Mode**:
+- Works without LLM credentials
+- Returns raw context when LLM unavailable
+- Graceful degradation
+
+### 5. Email Classification 🏷️
+
+**Automatic Categorization**:
+- Work, Urgent, Financial, Security, Social, etc.
+- Priority detection (High, Medium, Low)
+- Sentiment analysis (Positive, Neutral, Negative)
+- Tag extraction
+
+**Thread Detection**:
+- Groups emails into conversations
+- Tracks participants and timeline
+- Normalizes subjects (removes Re:, Fwd:)
+
+### 6. Analytics Dashboard 📊
+
+**Email Analytics**:
+- Overview statistics
+- Top senders analysis
+- Category distribution
+- Timeline visualization
+- Priority breakdown
+- Sentiment analysis
+- Keyword extraction
+
+**Search Analytics**:
+- Total searches performed
+- Average latency metrics
+- Popular queries
+- Zero-result queries
+
+### 7. Performance Optimization ⚡
+
+**Caching Layer** (Optional Redis):
+- Search result caching
+- RAG answer caching
+- Configurable TTL
+- Automatic fallback
+
+**Efficient Processing**:
+- Batch operations
+- Persistent vector store
+- Incremental indexing support
+- Connection pooling
 
 ---
 
 ## 📡 API Endpoints
 
-The FastAPI backend exposes these tool endpoints for watsonx Orchestrate:
-
 ### Email Tools
-
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/tool/emails/load` | GET | Load raw emails from dataset |
+| `/tool/emails/load` | GET | Load emails from dataset or Gmail |
 | `/tool/emails/normalize` | POST | Normalize emails into structured messages |
+| `/tool/emails/classify` | POST | Classify emails into categories |
+| `/tool/emails/threads` | POST | Detect conversation threads |
 
 ### Semantic Tools
-
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/tool/semantic/index` | POST | Create embeddings and index messages |
 | `/tool/semantic/search` | POST | Perform semantic search over emails |
 
 ### RAG Tools
-
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/tool/rag/answer` | POST | Answer questions with citations |
 
-### Utility Endpoints
+### Gmail OAuth
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/oauth/gmail/authorize` | GET | Get OAuth authorization URL |
+| `/oauth/gmail/callback` | POST | Handle OAuth callback |
+| `/oauth/gmail/status` | GET | Check authentication status |
+| `/oauth/gmail/revoke` | DELETE | Revoke Gmail access |
 
+### Gmail Operations
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/gmail/profile` | GET | Get Gmail user profile |
+| `/gmail/fetch` | POST | Fetch emails from Gmail |
+| `/gmail/labels` | GET | Get Gmail labels |
+
+### Analytics
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/analytics/emails` | GET | Get email analytics |
+| `/analytics/search` | GET | Get search analytics |
+| `/analytics/search/clear` | DELETE | Clear search history |
+
+### Utility
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/health` | GET | Health check |
@@ -167,140 +281,17 @@ The FastAPI backend exposes these tool endpoints for watsonx Orchestrate:
 
 ---
 
-## 🧪 Testing the System
+## 🔧 Configuration
 
-### 1. Initialize the System
+### Backend Environment Variables
 
-```bash
-# Load emails
-curl http://localhost:8000/tool/emails/load
-
-# Normalize emails
-curl -X POST http://localhost:8000/tool/emails/normalize \
-  -H "Content-Type: application/json" \
-  -d @test_data/raw_emails.json
-
-# Index messages
-curl -X POST http://localhost:8000/tool/semantic/index \
-  -H "Content-Type: application/json" \
-  -d @test_data/normalized_messages.json
-```
-
-### 2. Test Semantic Search
+Create `backend/.env`:
 
 ```bash
-curl -X POST http://localhost:8000/tool/semantic/search \
-  -H "Content-Type: application/json" \
-  -d '{
-    "query": "urgent deadlines",
-    "top_k": 5
-  }'
-```
+# Application
+APP_NAME=HackTheAgent Email Brain
+DEBUG=true
 
-### 3. Test RAG Answer
-
-```bash
-curl -X POST http://localhost:8000/tool/rag/answer \
-  -H "Content-Type: application/json" \
-  -d '{
-    "question": "What is the IBM Dev Day hackathon about?",
-    "top_k": 5
-  }'
-```
-
----
-
-## 🤖 watsonx Orchestrate Setup
-
-### 1. Import Agent Configurations
-
-See [`orchestrate/agent_configurations.md`](orchestrate/agent_configurations.md) for detailed agent setup instructions.
-
-**Agents to Create:**
-1. **Ingestion Agent** - Loads emails
-2. **Normalization Agent** - Normalizes emails
-3. **Indexing Agent** - Creates embeddings
-4. **Semantic Search Agent** - Finds relevant emails
-5. **RAG Answer Agent** - Generates grounded answers
-6. **Supervisor Agent** - Orchestrates the workflow
-
-### 2. Configure Tool Server
-
-In watsonx Orchestrate, set the tool server URL:
-- **Local**: `http://localhost:8000`
-- **Docker**: `http://hacktheagent-backend:8000`
-- **Cloud**: `https://your-domain.com`
-
-### 3. Test the Workflow
-
-Use the demo questions from [`orchestrate/demo_script.md`](orchestrate/demo_script.md)
-
----
-
-## 📊 Demo Questions
-
-Try these 8 questions to see the system in action:
-
-1. **"Which emails mention urgent deadlines?"** - Semantic search for urgency
-2. **"Summarize what IBM Dev Day hackathon requires"** - RAG with structured extraction
-3. **"Find emails about invoice payment and extract amount/date"** - Financial data extraction
-4. **"What did GitHub say about assigned issues?"** - Technical issue synthesis
-5. **"Show me all security vulnerabilities mentioned"** - Security aggregation
-6. **"What meetings do I have scheduled and when?"** - Calendar extraction
-7. **"What cost savings opportunities are available?"** - Business intelligence
-8. **"What training or learning opportunities are available?"** - Professional development
-
-See full demo script: [`orchestrate/demo_script.md`](orchestrate/demo_script.md)
-
----
-
-## 🗂️ Project Structure
-
-```
-HackTheAgent/
-├── backend/                     # Backend API Server
-│   ├── app/
-│   │   ├── __init__.py
-│   │   ├── main.py              # FastAPI application
-│   │   ├── config.py            # Configuration management
-│   │   ├── schemas.py           # Pydantic models
-│   │   ├── load.py              # Email loading
-│   │   ├── normalize.py         # Email normalization
-│   │   ├── semantic.py          # Semantic search engine
-│   │   ├── rag.py               # RAG engine
-│   │   └── data/
-│   │       └── emails.json      # Sample email dataset (25 emails)
-│   ├── requirements.txt         # Python dependencies
-│   ├── Dockerfile               # Container definition
-│   ├── .env.example             # Environment template
-│   └── .env                     # Local configuration (git-ignored)
-│
-├── frontend/                    # Frontend Application (To Be Developed)
-│   ├── src/                     # Source code
-│   ├── public/                  # Static assets
-│   └── README.md                # Frontend documentation
-│
-├── orchestrate/                 # watsonx Orchestrate Configuration
-│   ├── agent_configurations.md  # Agent setup instructions
-│   └── demo_script.md           # Demo questions & workflow
-│
-├── docker-compose.yml           # Docker orchestration
-├── ARCHITECTURE.md              # Detailed architecture documentation
-├── PROJECT_SUMMARY.md           # Project overview
-├── QUICKSTART.md                # Quick start guide
-├── SWAGGER_TEST_GUIDE.md        # API testing guide
-└── README.md                    # This file
-```
-
----
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-Create a `.env` file in the `backend/` directory:
-
-```bash
 # Embedding Settings
 EMBEDDING_PROVIDER=sentence-transformers
 EMBEDDING_MODEL=all-MiniLM-L6-v2
@@ -310,7 +301,7 @@ VECTOR_DB=chroma
 CHUNK_SIZE=500
 CHUNK_OVERLAP=50
 
-# LLM Settings (Optional - system works without LLM)
+# LLM Settings (Optional)
 LLM_PROVIDER=watsonx
 LLM_MODEL=ibm/granite-13b-chat-v2
 
@@ -318,50 +309,189 @@ LLM_MODEL=ibm/granite-13b-chat-v2
 WATSONX_API_KEY=your_api_key
 WATSONX_PROJECT_ID=your_project_id
 WATSONX_URL=https://us-south.ml.cloud.ibm.com
+
+# Gmail OAuth (Optional)
+GMAIL_CLIENT_ID=your_client_id.apps.googleusercontent.com
+GMAIL_CLIENT_SECRET=your_client_secret
+GMAIL_REDIRECT_URI=http://localhost:3000/gmail-oauth
+
+# Redis Cache (Optional)
+REDIS_URL=redis://localhost:6379/0
+CACHE_TTL=300
+
+# CORS
+CORS_ORIGINS=["http://localhost:3000"]
 ```
 
-### Without LLM Credentials
+### Gmail OAuth Setup
 
-The system works without LLM credentials! It will:
-- ✅ Perform semantic search perfectly
-- ✅ Return retrieved email chunks as context
-- ⚠️ Use fallback mode for RAG (returns raw context instead of generated answer)
+1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+2. Create a new project or select existing
+3. Enable Gmail API
+4. Create OAuth 2.0 credentials:
+   - Application type: Web application
+   - Authorized redirect URI: `http://localhost:3000/gmail-oauth`
+5. Copy Client ID and Client Secret to `.env`
+6. Restart backend server
+7. Visit http://localhost:3000/gmail-oauth to connect
 
 ---
 
-## 🎨 Key Features
+## 🧪 Testing
 
-### 1. Semantic Search
-- **Embeddings**: Uses Sentence Transformers (all-MiniLM-L6-v2)
-- **Vector DB**: Chroma with cosine similarity
-- **Chunking**: Smart text chunking with overlap for better context
-- **Ranking**: Results ranked by semantic similarity score
+### Manual Testing via UI
 
-### 2. RAG (Retrieval-Augmented Generation)
-- **Retrieval**: Semantic search finds relevant emails
-- **Context Building**: Constructs context from top-k results
-- **Generation**: LLM generates answer using only retrieved context
-- **Citations**: Every answer includes source email citations
-- **No Hallucination**: Grounded in actual email content
+1. **Start both servers** (backend and frontend)
+2. **Visit AI Agent**: http://localhost:3000/ai-agent
+3. **Try sample questions**:
+   - "Load my recent emails"
+   - "What are my emails about?"
+   - "Find emails about projects"
+   - "Summarize unread emails"
 
-### 3. Multi-Agent Orchestration
-- **Supervisor Pattern**: Main agent orchestrates specialized agents
-- **Clear Separation**: Each agent has one responsibility
-- **Explainability**: Transparent workflow and reasoning
-- **Error Handling**: Graceful degradation and error reporting
+### API Testing via Swagger
 
-### 4. Production Ready
-- **Docker**: Containerized deployment
-- **Health Checks**: Built-in health monitoring
-- **Logging**: Structured logging for debugging
-- **CORS**: Configurable cross-origin support
-- **API Docs**: Auto-generated OpenAPI documentation
+1. Visit http://localhost:8000/docs
+2. Try the endpoints interactively
+3. See request/response examples
+
+### Automated Tests
+
+```bash
+cd backend
+pytest tests/ -v
+pytest tests/ --cov=app  # With coverage
+```
+
+---
+
+## 📊 Demo Scenarios
+
+### Scenario 1: Natural Language Email Search
+```
+User: "Find emails about the hackathon"
+Agent: 
+  1. Automatically loads emails if needed
+  2. Performs semantic search
+  3. Returns relevant results with scores
+```
+
+### Scenario 2: Email Summarization
+```
+User: "Summarize my unread emails"
+Agent:
+  1. Searches for unread emails
+  2. Uses RAG to generate summary
+  3. Provides citations from source emails
+```
+
+### Scenario 3: Email Organization
+```
+User: "Organize my emails by category"
+Agent:
+  1. Loads all emails
+  2. Classifies into categories
+  3. Shows distribution and statistics
+```
+
+### Scenario 4: Gmail Integration
+```
+User: Connects Gmail via OAuth
+Agent:
+  1. Fetches real emails from Gmail
+  2. Indexes them for search
+  3. Enables all features with real data
+```
+
+---
+
+## 🗂️ Project Structure
+
+```
+HackTheAgent/
+├── backend/                     # FastAPI Backend
+│   ├── app/
+│   │   ├── main.py              # FastAPI application
+│   │   ├── config.py            # Configuration
+│   │   ├── schemas.py           # Pydantic models
+│   │   ├── load.py              # Email loading
+│   │   ├── normalize.py         # Email normalization
+│   │   ├── semantic.py          # Semantic search engine
+│   │   ├── rag.py               # RAG engine
+│   │   ├── classify.py          # Email classification
+│   │   ├── analytics.py         # Analytics engine
+│   │   ├── cache.py             # Redis caching
+│   │   ├── gmail_oauth.py       # Gmail OAuth service
+│   │   └── data/
+│   │       ├── emails.json      # Sample dataset (25 emails)
+│   │       └── gmail_token.json # Gmail OAuth token (auto-generated)
+│   ├── tests/
+│   │   └── test_api.py          # API tests
+│   ├── requirements.txt         # Python dependencies
+│   ├── Dockerfile               # Container definition
+│   └── .env.example             # Environment template
+│
+├── frontend/                    # Next.js Frontend
+│   ├── src/
+│   │   ├── components/          # React components
+│   │   │   ├── Layout.tsx       # Main layout
+│   │   │   ├── Card.tsx         # Card component
+│   │   │   ├── Button.tsx       # Button component
+│   │   │   ├── Alert.tsx        # Alert component
+│   │   │   └── LoadingSpinner.tsx
+│   │   ├── pages/
+│   │   │   ├── index.tsx        # Home (redirects to AI agent)
+│   │   │   ├── ai-agent.tsx     # AI Agent interface
+│   │   │   ├── gmail-oauth.tsx  # Gmail OAuth page
+│   │   │   └── analytics.tsx    # Analytics dashboard
+│   │   ├── lib/
+│   │   │   └── api.ts           # API client
+│   │   └── styles/
+│   │       └── globals.css      # Global styles
+│   ├── package.json             # Node dependencies
+│   └── next.config.js           # Next.js config
+│
+├── orchestrate/                 # watsonx Orchestrate Config
+│   ├── agent_configurations.md  # Agent setup guide
+│   └── demo_script.md           # Demo questions
+│
+├── docker-compose.yml           # Docker orchestration
+├── ARCHITECTURE.md              # Architecture documentation
+├── PROJECT_SUMMARY.md           # Project overview
+├── ENHANCEMENTS_SUMMARY.md      # Enhancement details
+├── GMAIL_OAUTH_SETUP.md         # Gmail setup guide
+└── README.md                    # This file
+```
+
+---
+
+## 🎯 Key Technologies
+
+### Backend
+- **FastAPI** - Modern Python web framework
+- **Sentence Transformers** - Efficient embeddings
+- **Chroma** - Vector database
+- **Google APIs** - Gmail integration
+- **Redis** - Optional caching layer
+- **watsonx** - Optional LLM provider
+
+### Frontend
+- **Next.js 13** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Axios** - HTTP client
+
+### AI/ML
+- **Semantic Search** - Meaning-based retrieval
+- **RAG** - Grounded answer generation
+- **Classification** - Category detection
+- **NLP** - Text processing
 
 ---
 
 ## 📈 Performance
 
-- **Dataset**: 25 realistic emails (expandable to 10,000+)
+- **Dataset**: 25 sample emails (expandable to 10,000+)
 - **Indexing**: ~127 chunks created
 - **Search Latency**: < 2 seconds
 - **RAG Latency**: < 5 seconds (with LLM)
@@ -372,112 +502,44 @@ The system works without LLM credentials! It will:
 
 ## 🔒 Privacy & Security
 
-- **No OAuth Required**: Works with local dataset
-- **Data Control**: All data stays in your infrastructure
-- **Optional LLM**: Can run without external LLM calls
+- **OAuth2**: Secure Gmail authentication
 - **Local Processing**: Embeddings generated locally
-- **Transparent**: Full visibility into data flow
-
----
-
-## 🛠️ Development
-
-### Running Tests
-
-```bash
-cd backend
-pytest tests/
-```
-
-### Code Quality
-
-```bash
-# Format code
-black app/
-
-# Lint
-flake8 app/
-
-# Type checking
-mypy app/
-```
-
-### Adding New Emails
-
-Edit `backend/app/data/emails.json` and add your email objects:
-
-```json
-{
-  "id": "email_026",
-  "from": "sender@example.com",
-  "to": "recipient@example.com",
-  "subject": "Your subject",
-  "date": "2026-01-31",
-  "body": "Email content..."
-}
-```
-
-Then re-index:
-
-```bash
-curl -X POST http://localhost:8000/tool/semantic/index \
-  -H "Content-Type: application/json" \
-  -d @backend/app/data/emails.json
-```
+- **Data Control**: All data in your infrastructure
+- **Optional LLM**: Can run without external LLM calls
+- **Token Storage**: Secure credential management
+- **Revocable Access**: Easy to disconnect Gmail
 
 ---
 
 ## 🚢 Deployment
 
-### Cloud Deployment (AWS/GCP/Azure)
+### Local Development
+```bash
+# Backend
+cd backend && uvicorn app.main:app --reload
 
-1. **Build Docker image**:
-   ```bash
-   docker build -t hacktheagent-backend ./backend
-   ```
-
-2. **Push to registry**:
-   ```bash
-   docker tag hacktheagent-backend your-registry/hacktheagent-backend
-   docker push your-registry/hacktheagent-backend
-   ```
-
-3. **Deploy to cloud**:
-   - AWS: ECS/EKS
-   - GCP: Cloud Run/GKE
-   - Azure: Container Instances/AKS
-
-4. **Configure watsonx Orchestrate** with your cloud URL
-
-### Kubernetes Deployment
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: hacktheagent-backend
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: hacktheagent-backend
-  template:
-    metadata:
-      labels:
-        app: hacktheagent-backend
-    spec:
-      containers:
-      - name: backend
-        image: your-registry/hacktheagent-backend
-        ports:
-        - containerPort: 8000
-        env:
-        - name: WATSONX_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: watsonx-credentials
-              key: api-key
+# Frontend
+cd frontend && npm run dev
 ```
+
+### Docker
+```bash
+docker-compose up --build
+```
+
+### Cloud Deployment
+
+**Backend** (AWS/GCP/Azure):
+1. Build Docker image
+2. Push to container registry
+3. Deploy to ECS/Cloud Run/AKS
+4. Configure environment variables
+
+**Frontend** (Vercel/Netlify):
+1. Connect GitHub repository
+2. Configure build settings
+3. Set environment variables
+4. Deploy automatically
 
 ---
 
@@ -485,13 +547,14 @@ spec:
 
 Contributions welcome! Areas for improvement:
 
-- [ ] Add OAuth support for Gmail/Outlook
-- [ ] Implement FAISS as alternative vector DB
-- [ ] Add more LLM providers (Ollama, Anthropic)
-- [ ] Create web UI for demos
-- [ ] Add email threading/conversation detection
-- [ ] Implement incremental indexing
-- [ ] Add multi-language support
+- [ ] Multi-modal search (attachments)
+- [ ] Real-time email monitoring
+- [ ] Advanced query understanding
+- [ ] Email templates and snippets
+- [ ] Mobile app
+- [ ] Browser extension
+- [ ] Slack/Teams integration
+- [ ] Multi-language support
 
 ---
 
@@ -505,18 +568,19 @@ MIT License - see LICENSE file for details
 
 - **IBM watsonx** - For Orchestrate and Granite models
 - **FastAPI** - For the excellent web framework
+- **Next.js** - For the React framework
 - **Sentence Transformers** - For efficient embeddings
 - **Chroma** - For the vector database
-- **Hackathon Organizers** - For the opportunity
+- **Google** - For Gmail API
 
 ---
 
 ## 📞 Support
 
 - **Documentation**: See `/docs` endpoint when server is running
+- **API Docs**: http://localhost:8000/docs
+- **Frontend**: http://localhost:3000
 - **Issues**: Open an issue on GitHub
-- **Demo**: See `orchestrate/demo_script.md`
-- **Agent Setup**: See `orchestrate/agent_configurations.md`
 
 ---
 
@@ -525,15 +589,16 @@ MIT License - see LICENSE file for details
 - ✅ Multi-agent system with clear orchestration
 - ✅ Semantic search with embeddings
 - ✅ RAG with citations (no hallucination)
-- ✅ Local dataset (no OAuth required)
+- ✅ Gmail OAuth integration
+- ✅ Interactive AI agent interface
+- ✅ Modern web UI with Next.js
+- ✅ Email classification and analytics
 - ✅ Docker deployment ready
 - ✅ Cloud-deployable architecture
 - ✅ Complete documentation
-- ✅ Demo script with 8 questions
-- ✅ watsonx Orchestrate integration
 - ✅ Production-ready code
-- ✅ Explainable AI (citations, transparency)
 - ✅ Privacy-first design
+- ✅ Comprehensive testing
 
 ---
 

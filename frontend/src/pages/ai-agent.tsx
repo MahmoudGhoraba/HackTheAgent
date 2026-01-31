@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import Layout from '@/components/Layout';
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import Alert from '@/components/Alert';
@@ -444,8 +443,7 @@ export default function AIAgentPage() {
   };
 
   return (
-    <Layout>
-      <div className="space-y-6">
+    <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">AI Email Agent</h1>
           <p className="mt-2 text-gray-600">
@@ -509,7 +507,7 @@ export default function AIAgentPage() {
 
         {/* Chat Messages */}
         <Card>
-          <div className="space-y-4 max-h-96 overflow-y-auto mb-4">
+          <div className="space-y-4 max-h-96 overflow-y-auto mb-4 custom-scrollbar">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -617,6 +615,5 @@ export default function AIAgentPage() {
           </div>
         </Card>
       </div>
-    </Layout>
   );
 }
