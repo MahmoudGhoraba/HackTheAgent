@@ -12,8 +12,10 @@ export default function Layout({ children }: LayoutProps) {
   const navItems = [
     { href: '/', label: 'Search', icon: '🔍' },
     { href: '/rag', label: 'Ask AI', icon: '🤖' },
+    { href: '/orchestrate', label: 'Agents', icon: '🎭' },
     { href: '/manage', label: 'Manage', icon: '📧' },
-    { href: '/stats', label: 'Stats', icon: '📊' },
+    { href: '/analytics', label: 'Analytics', icon: '📊' },
+    { href: '/stats', label: 'Stats', icon: '📈' },
   ];
 
   return (

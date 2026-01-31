@@ -113,3 +113,67 @@ class ErrorResponse(BaseModel):
     """Standard error response"""
     error: str
     detail: Optional[str] = None
+
+
+# Classification Models
+class EmailClassification(BaseModel):
+    """Email classification result"""
+    id: str
+    categories: List[str]
+    tags: List[str]
+    priority: str
+    sentiment: str
+    is_reply: bool
+    is_forward: bool
+    has_attachments: bool
+    word_count: int
+
+
+class ClassifyRequest(BaseModel):
+    """Request for /tool/emails/classify"""
+    emails: List[RawEmail]
+
+
+class ClassifyResponse(BaseModel):
+    """Response for /tool/emails/classify"""
+    classifications: List[EmailClassification]
+
+
+# Thread Models
+class EmailThread(BaseModel):
+    """Email conversation thread"""
+    thread_id: str
+    subject: str
+    emails: List[str]
+    participants: List[str]
+    start_date: str
+    last_date: str
+    email_count: int
+
+
+class ThreadsResponse(BaseModel):
+    """Response for /tool/emails/threads"""
+    threads: List[EmailThread]
+    total_threads: int
+
+
+# Analytics Models
+class AnalyticsResponse(BaseModel):
+    """Response for /analytics/emails"""
+    overview: Dict[str, Any]
+    senders: List[Dict[str, Any]]
+    categories: Dict[str, int]
+    timeline: Dict[str, Any]
+    priorities: Dict[str, int]
+    sentiments: Dict[str, int]
+    keywords: List[Dict[str, Any]]
+    threads: Dict[str, Any]
+
+
+class SearchStatsResponse(BaseModel):
+    """Response for /analytics/search"""
+    total_searches: int
+    avg_latency_ms: float
+    avg_results: float
+    popular_queries: List[Dict[str, Any]]
+    zero_result_queries: List[str]

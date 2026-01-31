@@ -11,12 +11,17 @@ from app.config import settings
 from app.schemas import (
     EmailsResponse, NormalizeRequest, NormalizeResponse,
     IndexRequest, IndexResponse, SearchRequest, SearchResponse,
-    RAGRequest, RAGResponse, ErrorResponse
+    RAGRequest, RAGResponse, ErrorResponse,
+    ClassifyRequest, ClassifyResponse, ThreadsResponse,
+    AnalyticsResponse, SearchStatsResponse, EmailThread
 )
 from app.load import load_emails
 from app.normalize import normalize_emails
 from app.semantic import get_search_engine
 from app.rag import get_rag_engine
+from app.classify import classifier, thread_detector
+from app.analytics import email_analytics, search_analytics
+from app.cache import cache
 
 # Configure logging
 logging.basicConfig(
@@ -272,6 +277,166 @@ async def get_stats():
     except Exception as e:
         return {"error": str(e)}
 
+
+# ==================== CLASSIFICATION TOOLS ====================
+
+@app.post(
+    "/tool/emails/classify",
+    response_model=ClassifyResponse,
+    tags=["Classification Tools"],
+    summary="Classify emails into categories",
+    description="Analyzes emails and assigns categories, tags, priority, and sentiment"
+)
+async def classify_emails_endpoint(request: ClassifyRequest):
+    """
+    Classify emails into categories with tags and metadata
+    
+    Args:
+        request: ClassifyRequest containing emails to classify
+        
+    Returns:
+        ClassifyResponse: Classifications for each email
+    """
+    try:
+        logger.info(f"Classifying {len(request.emails)} emails")
+        
+        # Convert to dict for classifier
+        emails_dict = [email.model_dump() for email in request.emails]
+        classifications = classifier.classify_batch(emails_dict)
+        
+        logger.info(f"Successfully classified {len(classifications)} emails")
+        return ClassifyResponse(classifications=classifications)
+    except Exception as e:
+        logger.error(f"Error classifying emails: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to classify emails: {str(e)}"
+        )
+
+
+@app.post(
+    "/tool/emails/threads",
+    response_model=ThreadsResponse,
+    tags=["Classification Tools"],
+    summary="Detect email conversation threads",
+    description="Groups emails into conversation threads based on subject and reply chains"
+)
+async def detect_threads_endpoint(request: ClassifyRequest):
+    """
+    Detect conversation threads in emails
+    
+    Args:
+        request: ClassifyRequest containing emails to analyze
+        
+    Returns:
+        ThreadsResponse: Detected threads with metadata
+    """
+    try:
+        logger.info(f"Detecting threads in {len(request.emails)} emails")
+        
+        # Convert to dict for thread detector
+        emails_dict = [email.model_dump() for email in request.emails]
+        thread_data = thread_detector.detect_threads(emails_dict)
+        
+        # Convert to response format
+        threads = []
+        for thread_id, thread_info in thread_data["threads"].items():
+            threads.append(EmailThread(
+                thread_id=thread_id,
+                subject=thread_info["subject"],
+                emails=thread_info["emails"],
+                participants=thread_info["participants"],
+                start_date=thread_info["start_date"],
+                last_date=thread_info["last_date"],
+                email_count=len(thread_info["emails"])
+            ))
+        
+        logger.info(f"Detected {len(threads)} conversation threads")
+        return ThreadsResponse(threads=threads, total_threads=len(threads))
+    except Exception as e:
+        logger.error(f"Error detecting threads: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to detect threads: {str(e)}"
+        )
+
+
+# ==================== ANALYTICS ENDPOINTS ====================
+
+@app.get(
+    "/analytics/emails",
+    response_model=AnalyticsResponse,
+    tags=["Analytics"],
+    summary="Get email analytics",
+    description="Comprehensive analytics including senders, categories, timeline, and more"
+)
+async def get_email_analytics():
+    """Get comprehensive email analytics"""
+    try:
+        logger.info("Generating email analytics")
+        
+        # Load emails
+        emails_response = load_emails()
+        emails_dict = [email.model_dump() for email in emails_response.emails]
+        
+        # Get classifications if available
+        try:
+            classifications = classifier.classify_batch(emails_dict)
+        except Exception:
+            classifications = []
+        
+        # Generate analytics
+        analytics = email_analytics.analyze_emails(emails_dict, classifications)
+        
+        logger.info("Successfully generated email analytics")
+        return analytics
+    except Exception as e:
+        logger.error(f"Error generating analytics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate analytics: {str(e)}"
+        )
+
+
+@app.get(
+    "/analytics/search",
+    response_model=SearchStatsResponse,
+    tags=["Analytics"],
+    summary="Get search analytics",
+    description="Statistics about search queries and performance"
+)
+async def get_search_analytics():
+    """Get search analytics and statistics"""
+    try:
+        logger.info("Retrieving search analytics")
+        stats = search_analytics.get_search_stats()
+        logger.info("Successfully retrieved search analytics")
+        return stats
+    except Exception as e:
+        logger.error(f"Error retrieving search analytics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve search analytics: {str(e)}"
+        )
+
+
+@app.delete(
+    "/analytics/search/clear",
+    tags=["Analytics"],
+    summary="Clear search history",
+    description="Clears all search analytics history"
+)
+async def clear_search_analytics():
+    """Clear search analytics history"""
+    try:
+        search_analytics.search_history = []
+        return {"status": "cleared", "message": "Search history cleared successfully"}
+    except Exception as e:
+        logger.error(f"Error clearing search analytics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to clear search analytics: {str(e)}"
+        )
 
 if __name__ == "__main__":
     import uvicorn

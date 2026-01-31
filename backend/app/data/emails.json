@@ -165,7 +165,7 @@
     "to": "developer@company.com",
     "subject": "CI/CD Pipeline Upgrade Scheduled",
     "date": "2026-01-30",
-    "body": "CI/CD Pipeline Upgrade\n\nWe're upgrading our Jenkins infrastructure:\n\nScheduled: February 2, 2026, 2:00 AM - 6:00 AM EST\n\nChanges:\n- Jenkins 2.400 → 2.440\n- New build agents (faster builds)\n- Updated plugins\n- Enhanced security\n\nExpected Impact:\n- 4 hours downtime\n- No deployments during window\n- Faster build times after upgrade\n\nPlease plan accordingly.\n\nDevOps Team"
+    "body": "CI/CD Pipeline Upgrade\n\nWe're upgrading our Jenkins infrastructure:\n\nScheduled: February 2, 2026, 2:00 AM - 6:00 AM EST\n\nChanges:\n- Jenkins 2.400 \u2192 2.440\n- New build agents (faster builds)\n- Updated plugins\n- Enhanced security\n\nExpected Impact:\n- 4 hours downtime\n- No deployments during window\n- Faster build times after upgrade\n\nPlease plan accordingly.\n\nDevOps Team"
   },
   {
     "id": "email_022",
@@ -197,6 +197,1206 @@
     "to": "developer@company.com",
     "subject": "Dependabot: 12 security updates available",
     "date": "2026-01-31",
-    "body": "Dependabot Security Updates\n\nRepository: company/backend-api\n\n12 security updates available:\n\nCritical (2):\n- express 4.17.1 → 4.18.2\n- jsonwebtoken 8.5.1 → 9.0.0\n\nHigh (5):\n- mongoose 5.13.0 → 6.8.0\n- axios 0.21.1 → 1.6.0\n- ws 7.4.6 → 8.12.0\n- semver 7.3.5 → 7.5.4\n- tough-cookie 4.0.0 → 4.1.3\n\nMedium (5):\n- moment 2.29.1 → 2.29.4\n- qs 6.9.4 → 6.11.0\n- minimist 1.2.5 → 1.2.8\n- node-fetch 2.6.1 → 2.6.9\n- xml2js 0.4.23 → 0.6.0\n\nCreate pull requests automatically?\n\nGitHub Dependabot"
+    "body": "Dependabot Security Updates\n\nRepository: company/backend-api\n\n12 security updates available:\n\nCritical (2):\n- express 4.17.1 \u2192 4.18.2\n- jsonwebtoken 8.5.1 \u2192 9.0.0\n\nHigh (5):\n- mongoose 5.13.0 \u2192 6.8.0\n- axios 0.21.1 \u2192 1.6.0\n- ws 7.4.6 \u2192 8.12.0\n- semver 7.3.5 \u2192 7.5.4\n- tough-cookie 4.0.0 \u2192 4.1.3\n\nMedium (5):\n- moment 2.29.1 \u2192 2.29.4\n- qs 6.9.4 \u2192 6.11.0\n- minimist 1.2.5 \u2192 1.2.8\n- node-fetch 2.6.1 \u2192 2.6.9\n- xml2js 0.4.23 \u2192 0.6.0\n\nCreate pull requests automatically?\n\nGitHub Dependabot"
+  },
+  {
+    "id": "email_026",
+    "from": "alerts@datadog.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-02-01",
+    "body": "Scheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly."
+  },
+  {
+    "id": "email_027",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Congratulations on your work anniversary!",
+    "date": "2026-02-01",
+    "body": "Happy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!"
+  },
+  {
+    "id": "email_028",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Reminder: Code freeze Monday",
+    "date": "2026-02-01",
+    "body": "Reminder: Code freeze starts Monday for the Q2 release.\n\nNo new features after 5 PM today. Bug fixes only!"
+  },
+  {
+    "id": "email_029",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Great work on the release!",
+    "date": "2026-02-02",
+    "body": "Team - amazing job on yesterday's release! Everything went smoothly and customers are loving the new features.\n\nLet's celebrate with team lunch on Friday!"
+  },
+  {
+    "id": "email_030",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "Quarterly goals check-in",
+    "date": "2026-02-02",
+    "body": "Time for our quarterly goals review.\n\nPlease update your progress in the HR portal by next Friday.\n\nLet's schedule a 1:1 to discuss."
+  },
+  {
+    "id": "email_031",
+    "from": "amanda.taylor@company.com",
+    "to": "developer@company.com",
+    "subject": "Reminder: Code freeze Monday",
+    "date": "2026-02-02",
+    "body": "Hello,\n\nReminder: Code freeze starts Monday for the Q2 release.\n\nNo new features after 5 PM today. Bug fixes only!\n\nBest,"
+  },
+  {
+    "id": "email_032",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Performance optimization ideas",
+    "date": "2026-02-03",
+    "body": "Been thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?"
+  },
+  {
+    "id": "email_033",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Performance optimization ideas",
+    "date": "2026-02-03",
+    "body": "Hello,\n\nBeen thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?\n\nThanks,"
+  },
+  {
+    "id": "email_034",
+    "from": "amanda.taylor@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Quick question about API",
+    "date": "2026-02-03",
+    "body": "Hi! Quick question - what's the rate limit on the /users endpoint? We're seeing some 429 errors.\n\nThanks!"
+  },
+  {
+    "id": "email_035",
+    "from": "team-lead@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Code review feedback",
+    "date": "2026-02-04",
+    "body": "Hi there,\n\nThanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?\n\nThanks!"
+  },
+  {
+    "id": "email_036",
+    "from": "david.kim@company.com",
+    "to": "developer@company.com",
+    "subject": "Deployment scheduled for tonight",
+    "date": "2026-02-04",
+    "body": "Heads up - deploying v2.5.0 to production tonight at 10 PM.\n\nExpected downtime: 15 minutes\n\nPlease be available in case of issues."
+  },
+  {
+    "id": "email_037",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Documentation update needed",
+    "date": "2026-02-04",
+    "body": "Hello,\n\nHey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet.\n\nThanks!"
+  },
+  {
+    "id": "email_038",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "Re: New feature request",
+    "date": "2026-02-05",
+    "body": "Sales team is asking for bulk export functionality.\n\n3 enterprise customers have requested this.\n\nCan we prioritize for next sprint?"
+  },
+  {
+    "id": "email_039",
+    "from": "alerts@datadog.com",
+    "to": "developer@company.com",
+    "subject": "Congratulations on your work anniversary!",
+    "date": "2026-02-05",
+    "body": "Happy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!"
+  },
+  {
+    "id": "email_040",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "Coffee chat this week?",
+    "date": "2026-02-05",
+    "body": "Hey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!"
+  },
+  {
+    "id": "email_041",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Re: Code review feedback",
+    "date": "2026-02-06",
+    "body": "Thanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?"
+  },
+  {
+    "id": "email_042",
+    "from": "support@aws.com",
+    "to": "developer@company.com",
+    "subject": "Bug report: Search not working",
+    "date": "2026-02-06",
+    "body": "Hello,\n\nUsers are reporting that search isn't returning results for queries with special characters.\n\nSteps to reproduce:\n1. Go to search page\n2. Enter 'test@example'\n3. No results shown\n\nPriority: High\n\nCheers!"
+  },
+  {
+    "id": "email_043",
+    "from": "david.kim@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Performance optimization ideas",
+    "date": "2026-02-06",
+    "body": "Been thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?"
+  },
+  {
+    "id": "email_044",
+    "from": "mike.rodriguez@company.com",
+    "to": "developer@company.com",
+    "subject": "Happy Friday! \ud83c\udf89",
+    "date": "2026-02-07",
+    "body": "Happy Friday team!\n\nGreat week - we shipped 3 features and fixed 12 bugs.\n\nEnjoy your weekend!"
+  },
+  {
+    "id": "email_045",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Coffee chat this week?",
+    "date": "2026-02-07",
+    "body": "Hello,\n\nHey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!\n\nBest,"
+  },
+  {
+    "id": "email_046",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Re: Congratulations on your work anniversary!",
+    "date": "2026-02-07",
+    "body": "Happy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!"
+  },
+  {
+    "id": "email_047",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Team lunch on Friday!",
+    "date": "2026-02-08",
+    "body": "\n\nWho's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!\n\nCheers!"
+  },
+  {
+    "id": "email_048",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Coffee chat this week?",
+    "date": "2026-02-08",
+    "body": "\n\nHey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!\n\n"
+  },
+  {
+    "id": "email_049",
+    "from": "alex.johnson@company.com",
+    "to": "developer@company.com",
+    "subject": "Great work on the release!",
+    "date": "2026-02-08",
+    "body": "Hello,\n\nTeam - amazing job on yesterday's release! Everything went smoothly and customers are loving the new features.\n\nLet's celebrate with team lunch on Friday!\n\n"
+  },
+  {
+    "id": "email_050",
+    "from": "notifications@slack.com",
+    "to": "developer@company.com",
+    "subject": "Re: Reminder: Code freeze Monday",
+    "date": "2026-02-09",
+    "body": "Hey!\n\nReminder: Code freeze starts Monday for the Q2 release.\n\nNo new features after 5 PM today. Bug fixes only!\n\nBest regards,"
+  },
+  {
+    "id": "email_051",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "Team lunch on Friday!",
+    "date": "2026-02-09",
+    "body": "Hello,\n\nWho's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!\n\n"
+  },
+  {
+    "id": "email_052",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "Performance optimization ideas",
+    "date": "2026-02-09",
+    "body": "\n\nBeen thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?\n\nThanks!"
+  },
+  {
+    "id": "email_053",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Re: Quarterly goals check-in",
+    "date": "2026-02-10",
+    "body": "\n\nTime for our quarterly goals review.\n\nPlease update your progress in the HR portal by next Friday.\n\nLet's schedule a 1:1 to discuss.\n\nCheers!"
+  },
+  {
+    "id": "email_054",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "Security patch available",
+    "date": "2026-02-10",
+    "body": "Hey!\n\nA critical security patch is available for our dependencies.\n\nPlease update and deploy ASAP:\n- express: 4.17.1 \u2192 4.18.2\n- jsonwebtoken: 8.5.1 \u2192 9.0.0\n\nThanks!"
+  },
+  {
+    "id": "email_055",
+    "from": "alerts@datadog.com",
+    "to": "developer@company.com",
+    "subject": "Re: Great work on the release!",
+    "date": "2026-02-10",
+    "body": "\n\nTeam - amazing job on yesterday's release! Everything went smoothly and customers are loving the new features.\n\nLet's celebrate with team lunch on Friday!\n\n"
+  },
+  {
+    "id": "email_056",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Re: Code review feedback",
+    "date": "2026-02-11",
+    "body": "Thanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?"
+  },
+  {
+    "id": "email_057",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-02-11",
+    "body": "Scheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly."
+  },
+  {
+    "id": "email_058",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Documentation update needed",
+    "date": "2026-02-11",
+    "body": "Hey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet."
+  },
+  {
+    "id": "email_059",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "Re: Documentation update needed",
+    "date": "2026-02-12",
+    "body": "\n\nHey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet.\n\nBest,"
+  },
+  {
+    "id": "email_060",
+    "from": "billing@stripe.com",
+    "to": "developer@company.com",
+    "subject": "Re: Interview feedback needed",
+    "date": "2026-02-12",
+    "body": "Can you provide feedback on today's candidate interview?\n\nCandidate: Jane Doe\nPosition: Senior Engineer\n\nPlease submit by EOD tomorrow."
+  },
+  {
+    "id": "email_061",
+    "from": "james.wilson@company.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-02-12",
+    "body": "Hi there,\n\nScheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly.\n\nThanks,"
+  },
+  {
+    "id": "email_062",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Re: Performance optimization ideas",
+    "date": "2026-02-13",
+    "body": "Hey!\n\nBeen thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?\n\nThanks,"
+  },
+  {
+    "id": "email_063",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "Coffee chat this week?",
+    "date": "2026-02-13",
+    "body": "Hey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!"
+  },
+  {
+    "id": "email_064",
+    "from": "james.wilson@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Reminder: Code freeze Monday",
+    "date": "2026-02-13",
+    "body": "Hi,\n\nReminder: Code freeze starts Monday for the Q2 release.\n\nNo new features after 5 PM today. Bug fixes only!\n\nThanks!"
+  },
+  {
+    "id": "email_065",
+    "from": "alex.johnson@company.com",
+    "to": "developer@company.com",
+    "subject": "Documentation update needed",
+    "date": "2026-02-14",
+    "body": "Hi there,\n\nHey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet.\n\nCheers!"
+  },
+  {
+    "id": "email_066",
+    "from": "james.wilson@company.com",
+    "to": "developer@company.com",
+    "subject": "Deployment scheduled for tonight",
+    "date": "2026-02-14",
+    "body": "Hello,\n\nHeads up - deploying v2.5.0 to production tonight at 10 PM.\n\nExpected downtime: 15 minutes\n\nPlease be available in case of issues.\n\nThanks,"
+  },
+  {
+    "id": "email_067",
+    "from": "lisa.park@company.com",
+    "to": "developer@company.com",
+    "subject": "Team lunch on Friday!",
+    "date": "2026-02-14",
+    "body": "\n\nWho's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!\n\nThanks!"
+  },
+  {
+    "id": "email_068",
+    "from": "devops@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Reminder: Code freeze Monday",
+    "date": "2026-02-15",
+    "body": "Reminder: Code freeze starts Monday for the Q2 release.\n\nNo new features after 5 PM today. Bug fixes only!"
+  },
+  {
+    "id": "email_069",
+    "from": "support@aws.com",
+    "to": "developer@company.com",
+    "subject": "Re: Reminder: Code freeze Monday",
+    "date": "2026-02-15",
+    "body": "Hi,\n\nReminder: Code freeze starts Monday for the Q2 release.\n\nNo new features after 5 PM today. Bug fixes only!\n\nBest,"
+  },
+  {
+    "id": "email_070",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Congratulations on your work anniversary!",
+    "date": "2026-02-15",
+    "body": "Hello,\n\nHappy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!\n\nBest regards,"
+  },
+  {
+    "id": "email_071",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Security patch available",
+    "date": "2026-02-16",
+    "body": "Hi there,\n\nA critical security patch is available for our dependencies.\n\nPlease update and deploy ASAP:\n- express: 4.17.1 \u2192 4.18.2\n- jsonwebtoken: 8.5.1 \u2192 9.0.0\n\nBest,"
+  },
+  {
+    "id": "email_072",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "Meeting notes from standup",
+    "date": "2026-02-16",
+    "body": "Daily Standup Notes:\n\n\u2705 Completed:\n- Fixed login bug\n- Deployed to staging\n\n\ud83d\udea7 In Progress:\n- Working on payment integration\n\n\ud83d\udeab Blockers:\n- Waiting for API keys from vendor"
+  },
+  {
+    "id": "email_073",
+    "from": "david.kim@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Security patch available",
+    "date": "2026-02-16",
+    "body": "A critical security patch is available for our dependencies.\n\nPlease update and deploy ASAP:\n- express: 4.17.1 \u2192 4.18.2\n- jsonwebtoken: 8.5.1 \u2192 9.0.0"
+  },
+  {
+    "id": "email_074",
+    "from": "notifications@slack.com",
+    "to": "developer@company.com",
+    "subject": "Re: New feature request",
+    "date": "2026-02-17",
+    "body": "Hi,\n\nSales team is asking for bulk export functionality.\n\n3 enterprise customers have requested this.\n\nCan we prioritize for next sprint?\n\nThanks!"
+  },
+  {
+    "id": "email_075",
+    "from": "alerts@datadog.com",
+    "to": "developer@company.com",
+    "subject": "Bug report: Search not working",
+    "date": "2026-02-17",
+    "body": "Users are reporting that search isn't returning results for queries with special characters.\n\nSteps to reproduce:\n1. Go to search page\n2. Enter 'test@example'\n3. No results shown\n\nPriority: High"
+  },
+  {
+    "id": "email_076",
+    "from": "emily.watson@client.com",
+    "to": "developer@company.com",
+    "subject": "Deployment scheduled for tonight",
+    "date": "2026-02-17",
+    "body": "Hey!\n\nHeads up - deploying v2.5.0 to production tonight at 10 PM.\n\nExpected downtime: 15 minutes\n\nPlease be available in case of issues.\n\n"
+  },
+  {
+    "id": "email_077",
+    "from": "lisa.park@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Re: Code review feedback",
+    "date": "2026-02-18",
+    "body": "Hello,\n\nThanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?\n\nThanks,"
+  },
+  {
+    "id": "email_078",
+    "from": "alex.johnson@company.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-02-18",
+    "body": "\n\nScheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly.\n\nThanks!"
+  },
+  {
+    "id": "email_079",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "Quick question about API",
+    "date": "2026-02-18",
+    "body": "Hi! Quick question - what's the rate limit on the /users endpoint? We're seeing some 429 errors.\n\nThanks!"
+  },
+  {
+    "id": "email_080",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: New team member starting Monday",
+    "date": "2026-02-19",
+    "body": "Hello,\n\nExcited to announce that Chris Anderson is joining our team as a Senior Engineer!\n\nFirst day: Monday\n\nPlease help make Chris feel welcome!\n\nCheers!"
+  },
+  {
+    "id": "email_081",
+    "from": "amanda.taylor@company.com",
+    "to": "developer@company.com",
+    "subject": "Security patch available",
+    "date": "2026-02-19",
+    "body": "A critical security patch is available for our dependencies.\n\nPlease update and deploy ASAP:\n- express: 4.17.1 \u2192 4.18.2\n- jsonwebtoken: 8.5.1 \u2192 9.0.0"
+  },
+  {
+    "id": "email_082",
+    "from": "emily.watson@client.com",
+    "to": "developer@company.com",
+    "subject": "Re: Interview feedback needed",
+    "date": "2026-02-19",
+    "body": "Hi,\n\nCan you provide feedback on today's candidate interview?\n\nCandidate: Jane Doe\nPosition: Senior Engineer\n\nPlease submit by EOD tomorrow.\n\n"
+  },
+  {
+    "id": "email_083",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-02-20",
+    "body": "Hi there,\n\nScheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly.\n\nThanks!"
+  },
+  {
+    "id": "email_084",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Re: Quarterly goals check-in",
+    "date": "2026-02-20",
+    "body": "Time for our quarterly goals review.\n\nPlease update your progress in the HR portal by next Friday.\n\nLet's schedule a 1:1 to discuss."
+  },
+  {
+    "id": "email_085",
+    "from": "notifications@slack.com",
+    "to": "developer@company.com",
+    "subject": "New team member starting Monday",
+    "date": "2026-02-20",
+    "body": "Hello,\n\nExcited to announce that Chris Anderson is joining our team as a Senior Engineer!\n\nFirst day: Monday\n\nPlease help make Chris feel welcome!\n\n"
+  },
+  {
+    "id": "email_086",
+    "from": "alex.johnson@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Documentation update needed",
+    "date": "2026-02-21",
+    "body": "Hey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet."
+  },
+  {
+    "id": "email_087",
+    "from": "alerts@datadog.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-02-21",
+    "body": "Scheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly."
+  },
+  {
+    "id": "email_088",
+    "from": "maria.garcia@company.com",
+    "to": "developer@company.com",
+    "subject": "Team lunch on Friday!",
+    "date": "2026-02-21",
+    "body": "Hello,\n\nWho's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!\n\nBest regards,"
+  },
+  {
+    "id": "email_089",
+    "from": "notifications@slack.com",
+    "to": "developer@company.com",
+    "subject": "New team member starting Monday",
+    "date": "2026-02-22",
+    "body": "Excited to announce that Chris Anderson is joining our team as a Senior Engineer!\n\nFirst day: Monday\n\nPlease help make Chris feel welcome!"
+  },
+  {
+    "id": "email_090",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Documentation update needed",
+    "date": "2026-02-22",
+    "body": "Hi there,\n\nHey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet.\n\nThanks!"
+  },
+  {
+    "id": "email_091",
+    "from": "billing@stripe.com",
+    "to": "developer@company.com",
+    "subject": "Coffee chat this week?",
+    "date": "2026-02-22",
+    "body": "\n\nHey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!\n\nBest,"
+  },
+  {
+    "id": "email_092",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Congratulations on your work anniversary!",
+    "date": "2026-02-23",
+    "body": "Happy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!"
+  },
+  {
+    "id": "email_093",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "New feature request",
+    "date": "2026-02-23",
+    "body": "Sales team is asking for bulk export functionality.\n\n3 enterprise customers have requested this.\n\nCan we prioritize for next sprint?"
+  },
+  {
+    "id": "email_094",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Documentation update needed",
+    "date": "2026-02-23",
+    "body": "Hey!\n\nHey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet.\n\nThanks!"
+  },
+  {
+    "id": "email_095",
+    "from": "security@company.com",
+    "to": "developer@company.com",
+    "subject": "Great work on the release!",
+    "date": "2026-02-24",
+    "body": "Team - amazing job on yesterday's release! Everything went smoothly and customers are loving the new features.\n\nLet's celebrate with team lunch on Friday!"
+  },
+  {
+    "id": "email_096",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Quarterly goals check-in",
+    "date": "2026-02-24",
+    "body": "Time for our quarterly goals review.\n\nPlease update your progress in the HR portal by next Friday.\n\nLet's schedule a 1:1 to discuss."
+  },
+  {
+    "id": "email_097",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Happy Friday! \ud83c\udf89",
+    "date": "2026-02-24",
+    "body": "Hi,\n\nHappy Friday team!\n\nGreat week - we shipped 3 features and fixed 12 bugs.\n\nEnjoy your weekend!\n\nThanks!"
+  },
+  {
+    "id": "email_098",
+    "from": "devops@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Team lunch on Friday!",
+    "date": "2026-02-25",
+    "body": "Hey!\n\nWho's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!\n\nThanks,"
+  },
+  {
+    "id": "email_099",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Performance optimization ideas",
+    "date": "2026-02-25",
+    "body": "Been thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?"
+  },
+  {
+    "id": "email_100",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Deployment scheduled for tonight",
+    "date": "2026-02-25",
+    "body": "Heads up - deploying v2.5.0 to production tonight at 10 PM.\n\nExpected downtime: 15 minutes\n\nPlease be available in case of issues."
+  },
+  {
+    "id": "email_101",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Performance optimization ideas",
+    "date": "2026-02-26",
+    "body": "Been thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?"
+  },
+  {
+    "id": "email_102",
+    "from": "billing@stripe.com",
+    "to": "developer@company.com",
+    "subject": "Coffee chat this week?",
+    "date": "2026-02-26",
+    "body": "Hey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!"
+  },
+  {
+    "id": "email_103",
+    "from": "support@aws.com",
+    "to": "developer@company.com",
+    "subject": "Team lunch on Friday!",
+    "date": "2026-02-26",
+    "body": "Hi,\n\nWho's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!\n\nThanks!"
+  },
+  {
+    "id": "email_104",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Bug report: Search not working",
+    "date": "2026-02-27",
+    "body": "Hi,\n\nUsers are reporting that search isn't returning results for queries with special characters.\n\nSteps to reproduce:\n1. Go to search page\n2. Enter 'test@example'\n3. No results shown\n\nPriority: High\n\nBest,"
+  },
+  {
+    "id": "email_105",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Server maintenance window",
+    "date": "2026-02-27",
+    "body": "Hey!\n\nScheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly.\n\nThanks!"
+  },
+  {
+    "id": "email_106",
+    "from": "amanda.taylor@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Code review feedback",
+    "date": "2026-02-27",
+    "body": "Hi,\n\nThanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?\n\nThanks,"
+  },
+  {
+    "id": "email_107",
+    "from": "mike.rodriguez@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Reminder: Code freeze Monday",
+    "date": "2026-02-28",
+    "body": "Reminder: Code freeze starts Monday for the Q2 release.\n\nNo new features after 5 PM today. Bug fixes only!"
+  },
+  {
+    "id": "email_108",
+    "from": "team-lead@company.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-02-28",
+    "body": "Scheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly."
+  },
+  {
+    "id": "email_109",
+    "from": "alerts@datadog.com",
+    "to": "developer@company.com",
+    "subject": "Re: Performance optimization ideas",
+    "date": "2026-02-28",
+    "body": "Hi there,\n\nBeen thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?\n\nBest regards,"
+  },
+  {
+    "id": "email_110",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Congratulations on your work anniversary!",
+    "date": "2026-03-01",
+    "body": "Happy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!"
+  },
+  {
+    "id": "email_111",
+    "from": "alex.johnson@company.com",
+    "to": "developer@company.com",
+    "subject": "Performance optimization ideas",
+    "date": "2026-03-01",
+    "body": "Been thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?"
+  },
+  {
+    "id": "email_112",
+    "from": "john.smith@partner.com",
+    "to": "developer@company.com",
+    "subject": "Quarterly goals check-in",
+    "date": "2026-03-01",
+    "body": "Hello,\n\nTime for our quarterly goals review.\n\nPlease update your progress in the HR portal by next Friday.\n\nLet's schedule a 1:1 to discuss.\n\nCheers!"
+  },
+  {
+    "id": "email_113",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "Re: Interview feedback needed",
+    "date": "2026-03-02",
+    "body": "Hi there,\n\nCan you provide feedback on today's candidate interview?\n\nCandidate: Jane Doe\nPosition: Senior Engineer\n\nPlease submit by EOD tomorrow.\n\nCheers!"
+  },
+  {
+    "id": "email_114",
+    "from": "james.wilson@company.com",
+    "to": "developer@company.com",
+    "subject": "New feature request",
+    "date": "2026-03-02",
+    "body": "Hello,\n\nSales team is asking for bulk export functionality.\n\n3 enterprise customers have requested this.\n\nCan we prioritize for next sprint?\n\nBest regards,"
+  },
+  {
+    "id": "email_115",
+    "from": "emily.watson@client.com",
+    "to": "developer@company.com",
+    "subject": "Performance optimization ideas",
+    "date": "2026-03-02",
+    "body": "Hi there,\n\nBeen thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?\n\nThanks!"
+  },
+  {
+    "id": "email_116",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Bug report: Search not working",
+    "date": "2026-03-03",
+    "body": "Users are reporting that search isn't returning results for queries with special characters.\n\nSteps to reproduce:\n1. Go to search page\n2. Enter 'test@example'\n3. No results shown\n\nPriority: High"
+  },
+  {
+    "id": "email_117",
+    "from": "mike.rodriguez@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Re: Code review feedback",
+    "date": "2026-03-03",
+    "body": "Thanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?"
+  },
+  {
+    "id": "email_118",
+    "from": "team-lead@company.com",
+    "to": "developer@company.com",
+    "subject": "New team member starting Monday",
+    "date": "2026-03-03",
+    "body": "Excited to announce that Chris Anderson is joining our team as a Senior Engineer!\n\nFirst day: Monday\n\nPlease help make Chris feel welcome!"
+  },
+  {
+    "id": "email_119",
+    "from": "mike.rodriguez@company.com",
+    "to": "developer@company.com",
+    "subject": "Team lunch on Friday!",
+    "date": "2026-03-04",
+    "body": "Hello,\n\nWho's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!\n\nBest,"
+  },
+  {
+    "id": "email_120",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "Re: Coffee chat this week?",
+    "date": "2026-03-04",
+    "body": "Hey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!"
+  },
+  {
+    "id": "email_121",
+    "from": "alex.johnson@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Quarterly goals check-in",
+    "date": "2026-03-04",
+    "body": "Time for our quarterly goals review.\n\nPlease update your progress in the HR portal by next Friday.\n\nLet's schedule a 1:1 to discuss."
+  },
+  {
+    "id": "email_122",
+    "from": "billing@stripe.com",
+    "to": "developer@company.com",
+    "subject": "Security patch available",
+    "date": "2026-03-05",
+    "body": "Hi there,\n\nA critical security patch is available for our dependencies.\n\nPlease update and deploy ASAP:\n- express: 4.17.1 \u2192 4.18.2\n- jsonwebtoken: 8.5.1 \u2192 9.0.0\n\n"
+  },
+  {
+    "id": "email_123",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Great work on the release!",
+    "date": "2026-03-05",
+    "body": "Team - amazing job on yesterday's release! Everything went smoothly and customers are loving the new features.\n\nLet's celebrate with team lunch on Friday!"
+  },
+  {
+    "id": "email_124",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Coffee chat this week?",
+    "date": "2026-03-05",
+    "body": "Hello,\n\nHey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!\n\nBest,"
+  },
+  {
+    "id": "email_125",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Documentation update needed",
+    "date": "2026-03-06",
+    "body": "Hey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet."
+  },
+  {
+    "id": "email_126",
+    "from": "devops@company.com",
+    "to": "developer@company.com",
+    "subject": "Interview feedback needed",
+    "date": "2026-03-06",
+    "body": "Hi there,\n\nCan you provide feedback on today's candidate interview?\n\nCandidate: Jane Doe\nPosition: Senior Engineer\n\nPlease submit by EOD tomorrow.\n\n"
+  },
+  {
+    "id": "email_127",
+    "from": "notifications@slack.com",
+    "to": "developer@company.com",
+    "subject": "Re: Quick question about API",
+    "date": "2026-03-06",
+    "body": "Hi! Quick question - what's the rate limit on the /users endpoint? We're seeing some 429 errors.\n\nThanks!"
+  },
+  {
+    "id": "email_128",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "New team member starting Monday",
+    "date": "2026-03-07",
+    "body": "Hey!\n\nExcited to announce that Chris Anderson is joining our team as a Senior Engineer!\n\nFirst day: Monday\n\nPlease help make Chris feel welcome!\n\nBest,"
+  },
+  {
+    "id": "email_129",
+    "from": "maria.garcia@company.com",
+    "to": "developer@company.com",
+    "subject": "Congratulations on your work anniversary!",
+    "date": "2026-03-07",
+    "body": "Hi,\n\nHappy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!\n\nBest,"
+  },
+  {
+    "id": "email_130",
+    "from": "emily.watson@client.com",
+    "to": "developer@company.com",
+    "subject": "Coffee chat this week?",
+    "date": "2026-03-07",
+    "body": "Hey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!"
+  },
+  {
+    "id": "email_131",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Documentation update needed",
+    "date": "2026-03-08",
+    "body": "Hey, noticed the API docs are outdated for the /auth endpoint. Can you update them?\n\nThe new OAuth flow isn't documented yet."
+  },
+  {
+    "id": "email_132",
+    "from": "david.kim@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Team lunch on Friday!",
+    "date": "2026-03-08",
+    "body": "Hi there,\n\nWho's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!\n\nCheers!"
+  },
+  {
+    "id": "email_133",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Performance optimization ideas",
+    "date": "2026-03-08",
+    "body": "Been thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?"
+  },
+  {
+    "id": "email_134",
+    "from": "lisa.park@company.com",
+    "to": "developer@company.com",
+    "subject": "New feature request",
+    "date": "2026-03-09",
+    "body": "Hello,\n\nSales team is asking for bulk export functionality.\n\n3 enterprise customers have requested this.\n\nCan we prioritize for next sprint?\n\nBest,"
+  },
+  {
+    "id": "email_135",
+    "from": "emily.watson@client.com",
+    "to": "developer@company.com",
+    "subject": "Re: Re: Code review feedback",
+    "date": "2026-03-09",
+    "body": "Hey!\n\nThanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?\n\n"
+  },
+  {
+    "id": "email_136",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Congratulations on your work anniversary!",
+    "date": "2026-03-09",
+    "body": "Hi there,\n\nHappy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!\n\nThanks,"
+  },
+  {
+    "id": "email_137",
+    "from": "david.kim@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Quarterly goals check-in",
+    "date": "2026-03-10",
+    "body": "Time for our quarterly goals review.\n\nPlease update your progress in the HR portal by next Friday.\n\nLet's schedule a 1:1 to discuss."
+  },
+  {
+    "id": "email_138",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Security patch available",
+    "date": "2026-03-10",
+    "body": "Hi there,\n\nA critical security patch is available for our dependencies.\n\nPlease update and deploy ASAP:\n- express: 4.17.1 \u2192 4.18.2\n- jsonwebtoken: 8.5.1 \u2192 9.0.0\n\nBest regards,"
+  },
+  {
+    "id": "email_139",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Code review feedback",
+    "date": "2026-03-10",
+    "body": "Hi,\n\nThanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?\n\nBest,"
+  },
+  {
+    "id": "email_140",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Performance optimization ideas",
+    "date": "2026-03-11",
+    "body": "Been thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?"
+  },
+  {
+    "id": "email_141",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Fwd: Customer feedback",
+    "date": "2026-03-11",
+    "body": "FYI - great feedback from customer!\n\n---\nThe new dashboard is fantastic! Our team loves it."
+  },
+  {
+    "id": "email_142",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "Quarterly goals check-in",
+    "date": "2026-03-11",
+    "body": "Time for our quarterly goals review.\n\nPlease update your progress in the HR portal by next Friday.\n\nLet's schedule a 1:1 to discuss."
+  },
+  {
+    "id": "email_143",
+    "from": "amanda.taylor@company.com",
+    "to": "developer@company.com",
+    "subject": "Meeting notes from standup",
+    "date": "2026-03-12",
+    "body": "\n\nDaily Standup Notes:\n\n\u2705 Completed:\n- Fixed login bug\n- Deployed to staging\n\n\ud83d\udea7 In Progress:\n- Working on payment integration\n\n\ud83d\udeab Blockers:\n- Waiting for API keys from vendor\n\nBest regards,"
+  },
+  {
+    "id": "email_144",
+    "from": "robert.brown@company.com",
+    "to": "developer@company.com",
+    "subject": "Interview feedback needed",
+    "date": "2026-03-12",
+    "body": "Hello,\n\nCan you provide feedback on today's candidate interview?\n\nCandidate: Jane Doe\nPosition: Senior Engineer\n\nPlease submit by EOD tomorrow.\n\n"
+  },
+  {
+    "id": "email_145",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Bug report: Search not working",
+    "date": "2026-03-12",
+    "body": "Users are reporting that search isn't returning results for queries with special characters.\n\nSteps to reproduce:\n1. Go to search page\n2. Enter 'test@example'\n3. No results shown\n\nPriority: High"
+  },
+  {
+    "id": "email_146",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "Bug report: Search not working",
+    "date": "2026-03-13",
+    "body": "Users are reporting that search isn't returning results for queries with special characters.\n\nSteps to reproduce:\n1. Go to search page\n2. Enter 'test@example'\n3. No results shown\n\nPriority: High"
+  },
+  {
+    "id": "email_147",
+    "from": "john.smith@partner.com",
+    "to": "developer@company.com",
+    "subject": "New feature request",
+    "date": "2026-03-13",
+    "body": "Sales team is asking for bulk export functionality.\n\n3 enterprise customers have requested this.\n\nCan we prioritize for next sprint?"
+  },
+  {
+    "id": "email_148",
+    "from": "mike.rodriguez@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: New feature request",
+    "date": "2026-03-13",
+    "body": "Sales team is asking for bulk export functionality.\n\n3 enterprise customers have requested this.\n\nCan we prioritize for next sprint?"
+  },
+  {
+    "id": "email_149",
+    "from": "james.wilson@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Congratulations on your work anniversary!",
+    "date": "2026-03-14",
+    "body": "Hey!\n\nHappy work anniversary! \ud83c\udf89\n\nCan't believe it's been 2 years already. Thanks for all your contributions to the team!\n\nBest regards,"
+  },
+  {
+    "id": "email_150",
+    "from": "lisa.park@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Interview feedback needed",
+    "date": "2026-03-14",
+    "body": "\n\nCan you provide feedback on today's candidate interview?\n\nCandidate: Jane Doe\nPosition: Senior Engineer\n\nPlease submit by EOD tomorrow.\n\nCheers!"
+  },
+  {
+    "id": "email_151",
+    "from": "team-lead@company.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-03-14",
+    "body": "Scheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly."
+  },
+  {
+    "id": "email_152",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "Quick question about API",
+    "date": "2026-03-15",
+    "body": "Hi! Quick question - what's the rate limit on the /users endpoint? We're seeing some 429 errors.\n\nThanks!"
+  },
+  {
+    "id": "email_153",
+    "from": "maria.garcia@company.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-03-15",
+    "body": "Scheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly."
+  },
+  {
+    "id": "email_154",
+    "from": "james.wilson@company.com",
+    "to": "developer@company.com",
+    "subject": "Fwd: Customer feedback",
+    "date": "2026-03-15",
+    "body": "FYI - great feedback from customer!\n\n---\nThe new dashboard is fantastic! Our team loves it."
+  },
+  {
+    "id": "email_155",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Security patch available",
+    "date": "2026-03-16",
+    "body": "A critical security patch is available for our dependencies.\n\nPlease update and deploy ASAP:\n- express: 4.17.1 \u2192 4.18.2\n- jsonwebtoken: 8.5.1 \u2192 9.0.0"
+  },
+  {
+    "id": "email_156",
+    "from": "devops@company.com",
+    "to": "developer@company.com",
+    "subject": "Fwd: Customer feedback",
+    "date": "2026-03-16",
+    "body": "FYI - great feedback from customer!\n\n---\nThe new dashboard is fantastic! Our team loves it."
+  },
+  {
+    "id": "email_157",
+    "from": "alerts@datadog.com",
+    "to": "developer@company.com",
+    "subject": "Re: Server maintenance window",
+    "date": "2026-03-16",
+    "body": "Scheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly."
+  },
+  {
+    "id": "email_158",
+    "from": "mike.rodriguez@company.com",
+    "to": "developer@company.com",
+    "subject": "Great work on the release!",
+    "date": "2026-03-17",
+    "body": "Team - amazing job on yesterday's release! Everything went smoothly and customers are loving the new features.\n\nLet's celebrate with team lunch on Friday!"
+  },
+  {
+    "id": "email_159",
+    "from": "mike.rodriguez@company.com",
+    "to": "developer@company.com",
+    "subject": "Server maintenance window",
+    "date": "2026-03-17",
+    "body": "Hi,\n\nScheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly.\n\nThanks,"
+  },
+  {
+    "id": "email_160",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "New feature request",
+    "date": "2026-03-17",
+    "body": "Hi there,\n\nSales team is asking for bulk export functionality.\n\n3 enterprise customers have requested this.\n\nCan we prioritize for next sprint?\n\nThanks!"
+  },
+  {
+    "id": "email_161",
+    "from": "security@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Code review feedback",
+    "date": "2026-03-18",
+    "body": "Thanks for the review! I've addressed your comments:\n\n1. Fixed the null pointer exception\n2. Added unit tests\n3. Updated documentation\n\nReady for another look?"
+  },
+  {
+    "id": "email_162",
+    "from": "emily.watson@client.com",
+    "to": "developer@company.com",
+    "subject": "Re: Interview feedback needed",
+    "date": "2026-03-18",
+    "body": "Can you provide feedback on today's candidate interview?\n\nCandidate: Jane Doe\nPosition: Senior Engineer\n\nPlease submit by EOD tomorrow."
+  },
+  {
+    "id": "email_163",
+    "from": "security@company.com",
+    "to": "developer@company.com",
+    "subject": "Meeting notes from standup",
+    "date": "2026-03-18",
+    "body": "Daily Standup Notes:\n\n\u2705 Completed:\n- Fixed login bug\n- Deployed to staging\n\n\ud83d\udea7 In Progress:\n- Working on payment integration\n\n\ud83d\udeab Blockers:\n- Waiting for API keys from vendor"
+  },
+  {
+    "id": "email_164",
+    "from": "sarah.chen@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Fwd: Customer feedback",
+    "date": "2026-03-19",
+    "body": "Hello,\n\nFYI - great feedback from customer!\n\n---\nThe new dashboard is fantastic! Our team loves it.\n\nCheers!"
+  },
+  {
+    "id": "email_165",
+    "from": "lisa.park@company.com",
+    "to": "developer@company.com",
+    "subject": "Great work on the release!",
+    "date": "2026-03-19",
+    "body": "Hello,\n\nTeam - amazing job on yesterday's release! Everything went smoothly and customers are loving the new features.\n\nLet's celebrate with team lunch on Friday!\n\nThanks,"
+  },
+  {
+    "id": "email_166",
+    "from": "amanda.taylor@company.com",
+    "to": "developer@company.com",
+    "subject": "Quick question about API",
+    "date": "2026-03-19",
+    "body": "Hi there,\n\nHi! Quick question - what's the rate limit on the /users endpoint? We're seeing some 429 errors.\n\nThanks!\n\nCheers!"
+  },
+  {
+    "id": "email_167",
+    "from": "devops@company.com",
+    "to": "developer@company.com",
+    "subject": "Deployment scheduled for tonight",
+    "date": "2026-03-20",
+    "body": "Heads up - deploying v2.5.0 to production tonight at 10 PM.\n\nExpected downtime: 15 minutes\n\nPlease be available in case of issues."
+  },
+  {
+    "id": "email_168",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "Coffee chat this week?",
+    "date": "2026-03-20",
+    "body": "Hi,\n\nHey! Want to grab coffee and catch up? I'd love to hear about your new project.\n\nFree Tuesday or Thursday afternoon?\n\nLet me know!\n\nCheers!"
+  },
+  {
+    "id": "email_169",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Team lunch on Friday!",
+    "date": "2026-03-20",
+    "body": "Who's in for team lunch on Friday at 12:30?\n\nThinking of trying that new Thai place downtown. Reply if you're coming!"
+  },
+  {
+    "id": "email_170",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "Re: Server maintenance window",
+    "date": "2026-03-21",
+    "body": "Hi there,\n\nScheduled maintenance:\n\nDate: This Saturday\nTime: 2 AM - 6 AM EST\nImpact: API will be unavailable\n\nPlease plan accordingly.\n\nBest,"
+  },
+  {
+    "id": "email_171",
+    "from": "jennifer.lee@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Bug report: Search not working",
+    "date": "2026-03-21",
+    "body": "Users are reporting that search isn't returning results for queries with special characters.\n\nSteps to reproduce:\n1. Go to search page\n2. Enter 'test@example'\n3. No results shown\n\nPriority: High"
+  },
+  {
+    "id": "email_172",
+    "from": "james.wilson@company.com",
+    "to": "developer@company.com",
+    "subject": "Re: Meeting notes from standup",
+    "date": "2026-03-21",
+    "body": "\n\nDaily Standup Notes:\n\n\u2705 Completed:\n- Fixed login bug\n- Deployed to staging\n\n\ud83d\udea7 In Progress:\n- Working on payment integration\n\n\ud83d\udeab Blockers:\n- Waiting for API keys from vendor\n\nThanks!"
+  },
+  {
+    "id": "email_173",
+    "from": "devops@company.com",
+    "to": "developer@company.com",
+    "subject": "Performance optimization ideas",
+    "date": "2026-03-22",
+    "body": "Hi,\n\nBeen thinking about ways to improve our API performance:\n\n1. Add Redis caching\n2. Implement database connection pooling\n3. Use CDN for static assets\n\nThoughts?\n\nThanks,"
+  },
+  {
+    "id": "email_174",
+    "from": "support@aws.com",
+    "to": "developer@company.com",
+    "subject": "Deployment scheduled for tonight",
+    "date": "2026-03-22",
+    "body": "Hi there,\n\nHeads up - deploying v2.5.0 to production tonight at 10 PM.\n\nExpected downtime: 15 minutes\n\nPlease be available in case of issues.\n\nThanks!"
+  },
+  {
+    "id": "email_175",
+    "from": "lisa.park@company.com",
+    "to": "developer@company.com",
+    "subject": "Happy Friday! \ud83c\udf89",
+    "date": "2026-03-22",
+    "body": "Happy Friday team!\n\nGreat week - we shipped 3 features and fixed 12 bugs.\n\nEnjoy your weekend!"
   }
 ]
