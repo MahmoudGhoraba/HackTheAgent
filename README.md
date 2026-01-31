@@ -71,8 +71,9 @@ HackTheAgent transforms your inbox into **semantic memory**. Instead of keyword 
 - Docker & Docker Compose (optional, for containerized deployment)
 - watsonx Orchestrate account (for agent orchestration)
 
-### Option 1: Local Development
+### Option 1: Local Development (Backend + Frontend)
 
+#### Backend Setup
 ```bash
 # 1. Clone the repository
 git clone <repository-url>
@@ -90,12 +91,27 @@ pip install -r requirements.txt
 cp .env.example .env
 # Edit .env and add your watsonx credentials if you have them
 
-# 5. Run the server
+# 5. Run the backend server
 uvicorn app.main:app --reload
-
-# 6. Test the API
-open http://localhost:8000/docs
+# Backend runs on http://localhost:8000
 ```
+
+#### Frontend Setup
+```bash
+# In a new terminal
+cd frontend
+
+# 1. Install dependencies
+npm install
+
+# 2. Run the development server
+npm run dev
+# Frontend runs on http://localhost:3000
+```
+
+#### Access the Application
+- **Frontend UI**: http://localhost:3000
+- **Backend API Docs**: http://localhost:8000/docs
 
 ### Option 2: Docker Deployment
 
