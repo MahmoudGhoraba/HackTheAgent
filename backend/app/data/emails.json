@@ -1,0 +1,202 @@
+[
+  {
+    "id": "email_001",
+    "from": "devday@ibm.com",
+    "to": "developer@company.com",
+    "subject": "IBM Dev Day Hackathon 2026 - Registration Confirmed",
+    "date": "2026-01-15",
+    "body": "Dear Developer,\n\nYour registration for IBM Dev Day Hackathon 2026 is confirmed! The event will take place on February 15-16, 2026.\n\nKey Requirements:\n- Build an AI-powered application using watsonx\n- Submit your project by February 16, 11:59 PM EST\n- Demo presentation: 5 minutes maximum\n- Team size: 1-4 members\n\nPrizes:\n1st Place: $10,000\n2nd Place: $5,000\n3rd Place: $2,500\n\nPlease bring your laptop and be ready to code!\n\nBest regards,\nIBM Dev Day Team"
+  },
+  {
+    "id": "email_002",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "You were assigned to issue #234: Fix authentication bug",
+    "date": "2026-01-20",
+    "body": "You have been assigned to issue #234 in repository company/backend-api.\n\nIssue: Fix authentication bug\nPriority: High\nDeadline: January 25, 2026\n\nDescription: Users are experiencing intermittent authentication failures when using OAuth2. The token refresh mechanism seems to be failing after 1 hour instead of the configured 24 hours.\n\nPlease investigate and fix ASAP.\n\nView on GitHub: https://github.com/company/backend-api/issues/234"
+  },
+  {
+    "id": "email_003",
+    "from": "finance@vendor.com",
+    "to": "developer@company.com",
+    "subject": "Invoice #INV-2026-0045 - Payment Due",
+    "date": "2026-01-18",
+    "body": "Dear Customer,\n\nThis is a reminder that Invoice #INV-2026-0045 is due for payment.\n\nInvoice Details:\n- Amount: $2,450.00\n- Due Date: January 31, 2026\n- Services: Cloud Infrastructure (December 2025)\n\nPlease process payment at your earliest convenience to avoid service interruption.\n\nPayment methods:\n- Wire transfer\n- Credit card\n- ACH\n\nThank you for your business!\n\nVendor Finance Team"
+  },
+  {
+    "id": "email_004",
+    "from": "manager@company.com",
+    "to": "developer@company.com",
+    "subject": "URGENT: Production deployment scheduled for tonight",
+    "date": "2026-01-22",
+    "body": "Team,\n\nWe have an urgent production deployment scheduled for tonight at 11 PM EST.\n\nDeployment checklist:\n1. Database migration scripts ready\n2. Rollback plan documented\n3. Monitoring alerts configured\n4. On-call engineer assigned\n\nExpected downtime: 30 minutes\n\nPlease confirm your availability for the deployment window.\n\nThanks,\nEngineering Manager"
+  },
+  {
+    "id": "email_005",
+    "from": "hr@company.com",
+    "to": "developer@company.com",
+    "subject": "Interview Schedule: Senior Backend Engineer Position",
+    "date": "2026-01-19",
+    "body": "Hello,\n\nWe have scheduled interviews for the Senior Backend Engineer position:\n\nCandidate: John Smith\nDate: January 26, 2026\nTime: 2:00 PM - 3:30 PM EST\n\nInterview Format:\n- Technical screening (45 min)\n- System design discussion (30 min)\n- Team fit conversation (15 min)\n\nPlease review the candidate's resume attached and prepare technical questions.\n\nLet me know if you have any conflicts.\n\nBest,\nHR Team"
+  },
+  {
+    "id": "email_006",
+    "from": "security@company.com",
+    "to": "developer@company.com",
+    "subject": "Security Alert: Vulnerability detected in dependencies",
+    "date": "2026-01-21",
+    "body": "SECURITY ALERT\n\nOur automated security scan has detected critical vulnerabilities in your project dependencies:\n\n1. lodash@4.17.15 - Prototype Pollution (CVE-2020-8203)\n   Severity: HIGH\n   Fix: Upgrade to lodash@4.17.21\n\n2. axios@0.21.0 - SSRF vulnerability (CVE-2021-3749)\n   Severity: MEDIUM\n   Fix: Upgrade to axios@0.21.4\n\nAction Required: Please update these dependencies within 48 hours.\n\nSecurity Team"
+  },
+  {
+    "id": "email_007",
+    "from": "notifications@jira.com",
+    "to": "developer@company.com",
+    "subject": "Sprint Planning Meeting - Tomorrow 10 AM",
+    "date": "2026-01-23",
+    "body": "Sprint Planning Meeting\n\nDate: January 24, 2026\nTime: 10:00 AM - 12:00 PM EST\nLocation: Conference Room B / Zoom\n\nAgenda:\n1. Review previous sprint velocity\n2. Discuss upcoming features\n3. Estimate story points\n4. Assign tasks\n\nPlease come prepared with:\n- Completed tasks from last sprint\n- Blockers or concerns\n- Capacity for next sprint\n\nZoom link: https://zoom.us/j/123456789\n\nScrum Master"
+  },
+  {
+    "id": "email_008",
+    "from": "support@aws.com",
+    "to": "developer@company.com",
+    "subject": "AWS Cost Optimization Recommendations",
+    "date": "2026-01-17",
+    "body": "Hello,\n\nWe've analyzed your AWS usage and identified cost optimization opportunities:\n\n1. EC2 Instances: 3 instances running 24/7 with <10% CPU utilization\n   Potential savings: $450/month\n   Recommendation: Downsize or use auto-scaling\n\n2. S3 Storage: 500GB in Standard tier, rarely accessed\n   Potential savings: $200/month\n   Recommendation: Move to Glacier\n\n3. RDS Database: Over-provisioned IOPS\n   Potential savings: $300/month\n\nTotal potential monthly savings: $950\n\nSchedule a call with our solutions architect?\n\nAWS Support Team"
+  },
+  {
+    "id": "email_009",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "Pull Request #89 requires your review",
+    "date": "2026-01-24",
+    "body": "Pull Request #89 is ready for your review\n\nTitle: Add rate limiting to API endpoints\nAuthor: jane.doe@company.com\nRepository: company/backend-api\n\nChanges:\n- Implemented Redis-based rate limiting\n- Added middleware for request throttling\n- Updated API documentation\n- Added unit tests\n\nFiles changed: 8\nLines added: 245\nLines removed: 12\n\nPlease review and approve or request changes.\n\nView PR: https://github.com/company/backend-api/pull/89"
+  },
+  {
+    "id": "email_010",
+    "from": "marketing@company.com",
+    "to": "developer@company.com",
+    "subject": "New Product Launch - Technical Requirements",
+    "date": "2026-01-16",
+    "body": "Hi Team,\n\nWe're launching our new AI-powered analytics dashboard on March 1, 2026.\n\nTechnical Requirements:\n- Real-time data processing\n- Support for 10,000 concurrent users\n- 99.9% uptime SLA\n- GDPR compliance\n- Mobile responsive design\n\nDeadline for MVP: February 20, 2026\n\nLet's schedule a kickoff meeting next week.\n\nMarketing Team"
+  },
+  {
+    "id": "email_011",
+    "from": "ceo@company.com",
+    "to": "developer@company.com",
+    "subject": "Company All-Hands Meeting - Q1 2026 Strategy",
+    "date": "2026-01-14",
+    "body": "Team,\n\nJoin us for our Q1 2026 All-Hands meeting:\n\nDate: January 30, 2026\nTime: 3:00 PM EST\nLocation: Virtual (Zoom)\n\nAgenda:\n- Q4 2025 results\n- Q1 2026 objectives\n- New product announcements\n- Team recognition\n- Q&A session\n\nThis is mandatory for all employees.\n\nLooking forward to seeing everyone!\n\nCEO"
+  },
+  {
+    "id": "email_012",
+    "from": "notifications@docker.com",
+    "to": "developer@company.com",
+    "subject": "Docker Hub: Image scan completed with vulnerabilities",
+    "date": "2026-01-25",
+    "body": "Image Scan Results\n\nRepository: company/backend-api\nTag: v2.1.0\nScan Date: January 25, 2026\n\nVulnerabilities Found:\n- Critical: 2\n- High: 5\n- Medium: 12\n- Low: 8\n\nCritical Issues:\n1. OpenSSL 1.1.1k - Remote Code Execution\n2. Node.js 14.17.0 - Denial of Service\n\nRecommendation: Update base image to node:18-alpine\n\nView detailed report: https://hub.docker.com/r/company/backend-api/tags"
+  },
+  {
+    "id": "email_013",
+    "from": "client@bigcorp.com",
+    "to": "developer@company.com",
+    "subject": "API Integration Issues - Need Help ASAP",
+    "date": "2026-01-26",
+    "body": "Hi,\n\nWe're experiencing issues integrating with your API:\n\n1. Authentication tokens expiring too quickly\n2. Rate limit errors (429) even with low request volume\n3. Webhook notifications not being received\n\nThis is blocking our production deployment scheduled for tomorrow.\n\nCan we schedule an emergency call today?\n\nClient: BigCorp Inc.\nContact: John Anderson\nPhone: +1-555-0123\n\nUrgent response needed!\n\nThanks,\nBigCorp Integration Team"
+  },
+  {
+    "id": "email_014",
+    "from": "training@company.com",
+    "to": "developer@company.com",
+    "subject": "Kubernetes Certification Training - Registration Open",
+    "date": "2026-01-13",
+    "body": "Professional Development Opportunity\n\nWe're offering Certified Kubernetes Administrator (CKA) training:\n\nDates: February 5-9, 2026\nFormat: Virtual instructor-led\nDuration: 5 days, 4 hours/day\nCost: Covered by company\n\nWhat you'll learn:\n- Cluster architecture\n- Workload management\n- Networking\n- Storage\n- Security\n- Troubleshooting\n\nExam voucher included!\n\nLimited spots available. Register by January 28.\n\nTraining & Development Team"
+  },
+  {
+    "id": "email_015",
+    "from": "notifications@slack.com",
+    "to": "developer@company.com",
+    "subject": "You were mentioned in #engineering channel",
+    "date": "2026-01-27",
+    "body": "New mention in #engineering\n\n@sarah.johnson: Hey @developer, can you help debug the memory leak in the user service? It's consuming 8GB RAM and growing. Logs show it's related to the caching layer you implemented last week.\n\nThread has 5 replies.\n\nView in Slack: https://company.slack.com/archives/C123456/p1234567890\n\nSlack Notifications"
+  },
+  {
+    "id": "email_016",
+    "from": "legal@company.com",
+    "to": "developer@company.com",
+    "subject": "Software License Audit - Action Required",
+    "date": "2026-01-12",
+    "body": "Annual Software License Audit\n\nWe're conducting our annual software license compliance audit.\n\nPlease provide:\n1. List of all third-party libraries used in production\n2. License types (MIT, Apache, GPL, etc.)\n3. Any custom license agreements\n\nDeadline: January 30, 2026\n\nNote: GPL licenses require special approval for commercial use.\n\nUse our license scanning tool: https://company.com/license-scanner\n\nLegal Team"
+  },
+  {
+    "id": "email_017",
+    "from": "monitoring@datadog.com",
+    "to": "developer@company.com",
+    "subject": "Alert: High Error Rate Detected",
+    "date": "2026-01-28",
+    "body": "ALERT: High Error Rate\n\nService: backend-api\nEnvironment: Production\nError Rate: 15.3% (threshold: 5%)\nTime: January 28, 2026 09:45 AM EST\n\nTop Errors:\n1. DatabaseConnectionError (45%)\n2. TimeoutException (30%)\n3. ValidationError (25%)\n\nAffected endpoints:\n- POST /api/v1/users\n- GET /api/v1/orders\n\nIncident: #INC-2026-0089\n\nView dashboard: https://app.datadoghq.com/dashboard/abc123\n\nDatadog Monitoring"
+  },
+  {
+    "id": "email_018",
+    "from": "recruiter@techcorp.com",
+    "to": "developer@company.com",
+    "subject": "Exciting Senior Engineer Opportunity at TechCorp",
+    "date": "2026-01-11",
+    "body": "Hi,\n\nI came across your profile and think you'd be a great fit for our Senior Backend Engineer role at TechCorp.\n\nPosition Details:\n- Location: Remote (US-based)\n- Salary: $180K - $220K + equity\n- Tech Stack: Python, Go, Kubernetes, AWS\n- Team: 15 engineers\n\nResponsibilities:\n- Design scalable microservices\n- Mentor junior engineers\n- Lead technical initiatives\n\nInterested in learning more? Let's schedule a call.\n\nBest regards,\nTechCorp Recruiting"
+  },
+  {
+    "id": "email_019",
+    "from": "newsletter@medium.com",
+    "to": "developer@company.com",
+    "subject": "Top Engineering Articles This Week",
+    "date": "2026-01-10",
+    "body": "Your Weekly Engineering Digest\n\nTop articles:\n\n1. \"Building Resilient Microservices with Circuit Breakers\"\n   by Jane Smith - 15 min read\n\n2. \"PostgreSQL Performance Tuning: A Complete Guide\"\n   by Mike Johnson - 20 min read\n\n3. \"Kubernetes Security Best Practices for 2026\"\n   by Sarah Lee - 12 min read\n\n4. \"Event-Driven Architecture: Patterns and Anti-Patterns\"\n   by David Chen - 18 min read\n\n5. \"Zero-Downtime Deployments with Blue-Green Strategy\"\n   by Alex Kumar - 10 min read\n\nHappy reading!\n\nMedium Engineering"
+  },
+  {
+    "id": "email_020",
+    "from": "pm@company.com",
+    "to": "developer@company.com",
+    "subject": "Feature Request: Real-time Collaboration",
+    "date": "2026-01-29",
+    "body": "Hi Team,\n\nWe've received multiple customer requests for real-time collaboration features:\n\nRequested Features:\n1. Live cursor tracking\n2. Presence indicators\n3. Real-time document editing\n4. Comment threads\n5. Version history\n\nBusiness Impact:\n- 3 enterprise deals pending (worth $500K)\n- Competitive advantage\n- Customer retention\n\nTechnical Considerations:\n- WebSocket infrastructure\n- Conflict resolution\n- Scalability (1000+ concurrent users)\n\nTarget: Q2 2026\n\nLet's discuss feasibility in next planning meeting.\n\nProduct Manager"
+  },
+  {
+    "id": "email_021",
+    "from": "devops@company.com",
+    "to": "developer@company.com",
+    "subject": "CI/CD Pipeline Upgrade Scheduled",
+    "date": "2026-01-30",
+    "body": "CI/CD Pipeline Upgrade\n\nWe're upgrading our Jenkins infrastructure:\n\nScheduled: February 2, 2026, 2:00 AM - 6:00 AM EST\n\nChanges:\n- Jenkins 2.400 → 2.440\n- New build agents (faster builds)\n- Updated plugins\n- Enhanced security\n\nExpected Impact:\n- 4 hours downtime\n- No deployments during window\n- Faster build times after upgrade\n\nPlease plan accordingly.\n\nDevOps Team"
+  },
+  {
+    "id": "email_022",
+    "from": "compliance@company.com",
+    "to": "developer@company.com",
+    "subject": "SOC 2 Audit - Documentation Required",
+    "date": "2026-01-08",
+    "body": "SOC 2 Type II Audit\n\nWe're undergoing our annual SOC 2 audit.\n\nRequired Documentation:\n1. Access control policies\n2. Incident response procedures\n3. Data encryption methods\n4. Backup and recovery processes\n5. Change management logs\n\nDeadline: February 5, 2026\n\nAuditor will interview key personnel on February 10-12.\n\nPlease prepare documentation and be available for interviews.\n\nCompliance Team"
+  },
+  {
+    "id": "email_023",
+    "from": "opensource@company.com",
+    "to": "developer@company.com",
+    "subject": "Open Source Contribution Approved",
+    "date": "2026-01-07",
+    "body": "Great news!\n\nYour request to contribute to the FastAPI project has been approved.\n\nContribution Details:\n- Project: FastAPI\n- Type: Bug fix + documentation\n- Estimated time: 10 hours\n- Company support: Yes\n\nGuidelines:\n- Use company email for commits\n- Mention company in PR description\n- Share learnings with team\n\nThis counts toward your professional development goals.\n\nHappy contributing!\n\nOpen Source Program Office"
+  },
+  {
+    "id": "email_024",
+    "from": "benefits@company.com",
+    "to": "developer@company.com",
+    "subject": "Health Insurance Open Enrollment - Deadline Feb 15",
+    "date": "2026-01-06",
+    "body": "Open Enrollment Period\n\nIt's time to review and update your health insurance benefits.\n\nDeadline: February 15, 2026\n\nAvailable Plans:\n- PPO Plan (higher premium, more flexibility)\n- HMO Plan (lower premium, network restrictions)\n- HSA-eligible HDHP (tax advantages)\n\nNew This Year:\n- Dental coverage included\n- Vision coverage included\n- Mental health support expanded\n\nSchedule a benefits consultation: https://company.com/benefits\n\nHR Benefits Team"
+  },
+  {
+    "id": "email_025",
+    "from": "notifications@github.com",
+    "to": "developer@company.com",
+    "subject": "Dependabot: 12 security updates available",
+    "date": "2026-01-31",
+    "body": "Dependabot Security Updates\n\nRepository: company/backend-api\n\n12 security updates available:\n\nCritical (2):\n- express 4.17.1 → 4.18.2\n- jsonwebtoken 8.5.1 → 9.0.0\n\nHigh (5):\n- mongoose 5.13.0 → 6.8.0\n- axios 0.21.1 → 1.6.0\n- ws 7.4.6 → 8.12.0\n- semver 7.3.5 → 7.5.4\n- tough-cookie 4.0.0 → 4.1.3\n\nMedium (5):\n- moment 2.29.1 → 2.29.4\n- qs 6.9.4 → 6.11.0\n- minimist 1.2.5 → 1.2.8\n- node-fetch 2.6.1 → 2.6.9\n- xml2js 0.4.23 → 0.6.0\n\nCreate pull requests automatically?\n\nGitHub Dependabot"
+  }
+]
