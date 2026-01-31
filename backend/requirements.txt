@@ -21,6 +21,12 @@ hiredis==2.3.2
 scikit-learn==1.4.0
 transformers==4.37.0
 
+# Gmail OAuth and API
+google-auth==2.27.0
+google-auth-oauthlib==1.2.0
+google-auth-httplib2==0.2.0
+google-api-python-client==2.116.0
+
 # Utilities
 python-dotenv==1.0.0
 numpy==1.26.3

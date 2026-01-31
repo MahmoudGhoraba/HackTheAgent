@@ -1,11 +1,11 @@
 """
 FastAPI main application - HackTheAgent Email Brain Tool Server
 """
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
-from typing import Dict
+from typing import Dict, Optional
 
 from app.config import settings
 from app.schemas import (
@@ -13,7 +13,10 @@ from app.schemas import (
     IndexRequest, IndexResponse, SearchRequest, SearchResponse,
     RAGRequest, RAGResponse, ErrorResponse,
     ClassifyRequest, ClassifyResponse, ThreadsResponse,
-    AnalyticsResponse, SearchStatsResponse, EmailThread
+    AnalyticsResponse, SearchStatsResponse, EmailThread,
+    OAuthUrlResponse, OAuthCallbackRequest, OAuthTokenResponse,
+    GmailProfileResponse, GmailFetchRequest, GmailFetchResponse,
+    GmailAuthStatusResponse, GmailEmailResponse
 )
 from app.load import load_emails
 from app.normalize import normalize_emails
@@ -22,6 +25,7 @@ from app.rag import get_rag_engine
 from app.classify import classifier, thread_detector
 from app.analytics import email_analytics, search_analytics
 from app.cache import cache
+from app.gmail_oauth import gmail_service
 
 # Configure logging
 logging.basicConfig(
@@ -91,25 +95,40 @@ async def root() -> Dict[str, str]:
     "/tool/emails/load",
     response_model=EmailsResponse,
     tags=["Email Tools"],
-    summary="Load raw emails from dataset",
-    description="Fetches raw emails from the local JSON dataset file"
+    summary="Load raw emails from dataset or Gmail",
+    description="Fetches raw emails from local JSON dataset file or Gmail (if authenticated)"
 )
-async def load_emails_endpoint():
+async def load_emails_endpoint(
+    source: str = Query("file", description="Source: 'file' or 'gmail'"),
+    max_results: int = Query(100, ge=1, le=500, description="Max emails to fetch (Gmail only)"),
+    query: str = Query("", description="Gmail search query (Gmail only)")
+):
     """
-    Load raw emails from the dataset
+    Load raw emails from dataset or Gmail
+    
+    Args:
+        source: "file" for JSON dataset, "gmail" for Gmail API
+        max_results: Maximum number of emails to fetch (for Gmail)
+        query: Gmail search query (for Gmail)
     
     Returns:
         EmailsResponse: List of raw emails
     """
     try:
-        logger.info("Loading emails from dataset")
-        response = load_emails()
-        logger.info(f"Successfully loaded {len(response.emails)} emails")
+        logger.info(f"Loading emails from {source}")
+        response = load_emails(source=source, max_results=max_results, query=query)
+        logger.info(f"Successfully loaded {len(response.emails)} emails from {source}")
         return response
     except FileNotFoundError as e:
         logger.error(f"Email file not found: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+    except ValueError as e:
+        logger.error(f"Value error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
     except Exception as e:
@@ -433,6 +452,228 @@ async def clear_search_analytics():
         return {"status": "cleared", "message": "Search history cleared successfully"}
     except Exception as e:
         logger.error(f"Error clearing search analytics: {str(e)}")
+
+# ==================== GMAIL OAUTH ENDPOINTS ====================
+
+@app.get(
+    "/oauth/gmail/authorize",
+    response_model=OAuthUrlResponse,
+    tags=["Gmail OAuth"],
+    summary="Get Gmail OAuth authorization URL",
+    description="Returns the URL for user to authorize Gmail access"
+)
+async def get_gmail_auth_url(state: Optional[str] = Query(None)):
+    """
+    Get Gmail OAuth authorization URL
+    
+    Args:
+        state: Optional state parameter for CSRF protection
+        
+    Returns:
+        OAuthUrlResponse: Authorization URL
+    """
+    try:
+        logger.info("Generating Gmail OAuth authorization URL")
+        auth_url = gmail_service.get_authorization_url(state=state)
+        return OAuthUrlResponse(authorization_url=auth_url, state=state)
+    except ValueError as e:
+        logger.error(f"Configuration error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Error generating auth URL: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate authorization URL: {str(e)}"
+        )
+
+
+@app.post(
+    "/oauth/gmail/callback",
+    response_model=OAuthTokenResponse,
+    tags=["Gmail OAuth"],
+    summary="Handle Gmail OAuth callback",
+    description="Exchange authorization code for access token"
+)
+async def gmail_oauth_callback(request: OAuthCallbackRequest):
+    """
+    Handle OAuth callback and exchange code for token
+    
+    Args:
+        request: OAuthCallbackRequest with authorization code
+        
+    Returns:
+        OAuthTokenResponse: Token information
+    """
+    try:
+        logger.info("Processing Gmail OAuth callback")
+        token_info = gmail_service.exchange_code_for_token(request.code)
+        return OAuthTokenResponse(**token_info)
+    except Exception as e:
+        logger.error(f"Error exchanging code for token: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to exchange code for token: {str(e)}"
+        )
+
+
+@app.get(
+    "/oauth/gmail/status",
+    response_model=GmailAuthStatusResponse,
+    tags=["Gmail OAuth"],
+    summary="Check Gmail authentication status",
+    description="Check if user is authenticated with Gmail"
+)
+async def check_gmail_auth_status():
+    """Check Gmail authentication status"""
+    try:
+        is_authenticated = gmail_service.is_authenticated()
+        
+        email = None
+        if is_authenticated:
+            try:
+                profile = gmail_service.get_user_profile()
+                email = profile.get("email")
+            except Exception:
+                pass
+        
+        return GmailAuthStatusResponse(
+            authenticated=is_authenticated,
+            email=email
+        )
+    except Exception as e:
+        logger.error(f"Error checking auth status: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to check authentication status: {str(e)}"
+        )
+
+
+@app.delete(
+    "/oauth/gmail/revoke",
+    tags=["Gmail OAuth"],
+    summary="Revoke Gmail access",
+    description="Revoke OAuth token and delete credentials"
+)
+async def revoke_gmail_access():
+    """Revoke Gmail OAuth access"""
+    try:
+        logger.info("Revoking Gmail access")
+        gmail_service.revoke_token()
+        return {"status": "revoked", "message": "Gmail access revoked successfully"}
+    except Exception as e:
+        logger.error(f"Error revoking access: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to revoke access: {str(e)}"
+        )
+
+
+@app.get(
+    "/gmail/profile",
+    response_model=GmailProfileResponse,
+    tags=["Gmail"],
+    summary="Get Gmail user profile",
+    description="Get authenticated user's Gmail profile information"
+)
+async def get_gmail_profile():
+    """Get Gmail user profile"""
+    try:
+        if not gmail_service.is_authenticated():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated. Please authenticate with Gmail first."
+            )
+        
+        logger.info("Fetching Gmail profile")
+        profile = gmail_service.get_user_profile()
+        return GmailProfileResponse(**profile)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching profile: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch profile: {str(e)}"
+        )
+
+
+@app.post(
+    "/gmail/fetch",
+    response_model=GmailFetchResponse,
+    tags=["Gmail"],
+    summary="Fetch emails from Gmail",
+    description="Fetch emails from authenticated Gmail account"
+)
+async def fetch_gmail_emails(request: GmailFetchRequest):
+    """
+    Fetch emails from Gmail
+    
+    Args:
+        request: GmailFetchRequest with max_results and query
+        
+    Returns:
+        GmailFetchResponse: List of fetched emails
+    """
+    try:
+        if not gmail_service.is_authenticated():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated. Please authenticate with Gmail first."
+            )
+        
+        logger.info(f"Fetching {request.max_results} emails with query: '{request.query}'")
+        emails = gmail_service.fetch_emails(
+            max_results=request.max_results,
+            query=request.query
+        )
+        
+        # Convert to response format
+        email_responses = [GmailEmailResponse(**email) for email in emails]
+        
+        return GmailFetchResponse(
+            emails=email_responses,
+            count=len(email_responses)
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching emails: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch emails: {str(e)}"
+        )
+
+
+@app.get(
+    "/gmail/labels",
+    tags=["Gmail"],
+    summary="Get Gmail labels",
+    description="Get all labels from authenticated Gmail account"
+)
+async def get_gmail_labels():
+    """Get Gmail labels"""
+    try:
+        if not gmail_service.is_authenticated():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated. Please authenticate with Gmail first."
+            )
+        
+        logger.info("Fetching Gmail labels")
+        labels = gmail_service.get_labels()
+        return {"labels": labels, "count": len(labels)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching labels: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch labels: {str(e)}"
+        )
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to clear search analytics: {str(e)}"

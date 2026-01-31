@@ -51,6 +51,18 @@ class Settings(BaseSettings):
     watsonx_url: Optional[str] = "https://us-south.ml.cloud.ibm.com"
     openai_api_key: Optional[str] = None
     
+    # Gmail OAuth Settings
+    gmail_client_id: Optional[str] = None
+    gmail_client_secret: Optional[str] = None
+    gmail_redirect_uri: str = "http://localhost:3000/oauth/callback"
+    gmail_scopes: list = [
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/gmail.modify"
+    ]
+    gmail_token_file: str = "gmail_token.json"
+    
     # Redis Cache (optional)
     redis_url: Optional[str] = None  # e.g., "redis://localhost:6379/0"
     cache_ttl: int = 300  # 5 minutes default
