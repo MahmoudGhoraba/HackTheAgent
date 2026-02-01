@@ -26,6 +26,7 @@ from app.classify import classifier, thread_detector
 from app.analytics import email_analytics, search_analytics
 from app.cache import cache
 from app.gmail_oauth import gmail_service
+from app.orchestrator import get_orchestrator, WorkflowExecution
 
 # Configure logging
 logging.basicConfig(
@@ -272,6 +273,114 @@ async def rag_answer_endpoint(request: RAGRequest):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate answer: {str(e)}"
+        )
+
+
+# ==================== ORCHESTRATOR / WORKFLOW ====================
+
+@app.post(
+    "/workflow/execute",
+    tags=["Orchestrator"],
+    summary="Execute multi-agent workflow",
+    description="Executes coordinated multi-agent workflow: Intent Detection → Semantic Search → Classification → RAG Generation"
+)
+async def execute_workflow_endpoint(request: RAGRequest):
+    """
+    Execute the full multi-agent IBM Orchestrate-inspired workflow.
+    
+    Workflow steps:
+    1. Intent Detection Agent - Analyzes user query
+    2. Semantic Search Agent - Searches emails by meaning
+    3. Classification Agent - Prioritizes results
+    4. RAG Generation Agent - Generates grounded answer
+    
+    Args:
+        request: RAGRequest with question and top_k
+        
+    Returns:
+        WorkflowExecution: Complete workflow execution record with all steps
+    """
+    try:
+        logger.info(f"Starting workflow execution for: '{request.question}'")
+        orchestrator = get_orchestrator()
+        execution = await orchestrator.execute_workflow(
+            query=request.question,
+            top_k=request.top_k,
+            enable_rag=True
+        )
+        logger.info(f"Workflow execution completed: {execution.execution_id}")
+        
+        return execution.to_dict()
+    except Exception as e:
+        logger.error(f"Error executing workflow: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Workflow execution failed: {str(e)}"
+        )
+
+
+@app.get(
+    "/workflow/execution/{execution_id}",
+    tags=["Orchestrator"],
+    summary="Get workflow execution details",
+    description="Retrieves detailed execution record for a specific workflow run"
+)
+async def get_workflow_execution(execution_id: str):
+    """
+    Get details of a specific workflow execution
+    
+    Args:
+        execution_id: The execution ID to retrieve
+        
+    Returns:
+        WorkflowExecution: Execution record with all steps and results
+    """
+    try:
+        orchestrator = get_orchestrator()
+        execution = orchestrator.get_execution(execution_id)
+        
+        if not execution:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Execution {execution_id} not found"
+            )
+        
+        return execution.to_dict()
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving execution: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve execution: {str(e)}"
+        )
+
+
+@app.get(
+    "/workflow/recent",
+    tags=["Orchestrator"],
+    summary="Get recent workflow executions",
+    description="Retrieves list of recent workflow executions"
+)
+async def get_recent_workflows(limit: int = Query(10, ge=1, le=100)):
+    """
+    Get recent workflow executions
+    
+    Args:
+        limit: Maximum number of executions to return (1-100)
+        
+    Returns:
+        List of recent workflow executions
+    """
+    try:
+        orchestrator = get_orchestrator()
+        executions = orchestrator.list_recent_executions(limit=limit)
+        return [e.to_dict() for e in executions]
+    except Exception as e:
+        logger.error(f"Error retrieving recent workflows: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve workflows: {str(e)}"
         )
 
 

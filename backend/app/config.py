@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     llm_provider: str = "watsonx"  # or "openai", "ollama"
     llm_model: str = "ibm/granite-13b-chat-v2"
     llm_temperature: float = 0.1
-    llm_max_tokens: int = 500
+    llm_max_tokens: int = 2048
     
     # API Keys (optional, loaded from environment)
     watsonx_api_key: Optional[str] = None

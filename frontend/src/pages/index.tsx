@@ -36,11 +36,15 @@ export default function Home() {
             <BrainIcon className="w-32 h-32 text-blue-600 dark:text-blue-400 mx-auto mb-6 float" />
           </div>
           <h1 className="text-6xl md:text-7xl font-bold gradient-text mb-4">
-            Email Brain AI
+            HackTheAgent
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 font-medium max-w-3xl mx-auto">
-            Your intelligent email assistant powered by{' '}
-            <span className="font-bold gradient-text">IBM watsonx</span>
+          <p className="text-2xl md:text-3xl text-gray-900 dark:text-white font-bold max-w-3xl mx-auto mb-3">
+            Find critical emails in <span className="text-blue-600 dark:text-blue-400">seconds, not hours</span>
+          </p>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-medium max-w-3xl mx-auto">
+            Multi-agent AI orchestration with{' '}
+            <span className="font-bold text-blue-600 dark:text-blue-400">IBM Orchestrate</span> &{' '}
+            <span className="font-bold text-blue-600 dark:text-blue-400">watsonx</span>
           </p>
         </div>
 
@@ -48,25 +52,25 @@ export default function Home() {
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 ${mounted ? 'slide-in-left' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
           <div className="glass rounded-2xl p-6 hover-lift hover-glow">
             <SearchIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Smart Search</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Semantic Search</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Find emails instantly with natural language queries powered by semantic search
+              Understand intent, not just keywords. Find "urgent meetings" without typing those exact words.
             </p>
           </div>
           
           <div className="glass rounded-2xl p-6 hover-lift hover-glow" style={{ animationDelay: '0.1s' }}>
             <RobotIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">AI Assistant</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Multi-Agent Orchestration</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Ask questions about your emails and get intelligent, context-aware answers
+              Coordinated AI agents powered by IBM Orchestrate and watsonx for intelligent workflows.
             </p>
           </div>
           
           <div className="glass rounded-2xl p-6 hover-lift hover-glow" style={{ animationDelay: '0.2s' }}>
             <ChartIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Auto-Organize</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Smart Prioritization</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Automatically classify and prioritize emails with advanced ML models
+              Automatically surfaces critical emails. Never miss important messages in the noise.
             </p>
           </div>
         </div>
@@ -82,7 +86,7 @@ export default function Home() {
           <Button
             onClick={handleConnectGmail}
             variant="secondary"
-            className="glass px-8 py-4 text-lg font-semibold rounded-xl hover-lift min-w-[200px] flex items-center space-x-2"
+            className="bg-white dark:bg-slate-700 border-2 border-blue-200 dark:border-blue-600 text-gray-900 dark:text-white px-8 py-4 text-lg font-semibold rounded-xl hover-lift min-w-[200px] flex items-center space-x-2 hover:bg-blue-50 dark:hover:bg-slate-600"
           >
             <MailIcon className="w-5 h-5" />
             <span>Connect Gmail</span>
@@ -92,22 +96,25 @@ export default function Home() {
         {/* Stats */}
         <div className={`grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto ${mounted ? 'fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
           <div className="text-center">
-            <div className="text-3xl font-bold gradient-text">10x</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Faster Search</div>
+            <div className="text-3xl font-bold gradient-text">&lt;2s</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Find Critical Email</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold gradient-text">95%</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Accuracy</div>
+            <div className="text-3xl font-bold gradient-text">99%</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Precision</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold gradient-text">24/7</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Available</div>
+            <div className="text-3xl font-bold gradient-text">3 Agents</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Coordinated</div>
           </div>
         </div>
 
         {/* Tech stack badges */}
         <div className={`flex flex-wrap justify-center gap-3 mt-12 ${mounted ? 'fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
-          <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
+          <span className="glass px-4 py-2 rounded-full text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950">
+            IBM Orchestrate
+          </span>
+          <span className="glass px-4 py-2 rounded-full text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950">
             IBM watsonx
           </span>
           <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
@@ -117,19 +124,12 @@ export default function Home() {
             Next.js
           </span>
           <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
-            OAuth 2.0
-          </span>
-          <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
             RAG Pipeline
           </span>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="text-gray-400 dark:text-gray-500 text-sm">Scroll to explore</div>
-        <ChevronDownIcon className="w-6 h-6 text-gray-400 dark:text-gray-500 mx-auto mt-1" />
-      </div>
     </div>
   );
 }

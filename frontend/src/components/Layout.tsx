@@ -42,8 +42,8 @@ export default function Layout({ children }: LayoutProps) {
             >
               <BrainIcon className="w-8 h-8 text-blue-600 dark:text-blue-400 float" />
               <div>
-                <h1 className="text-xl font-bold gradient-text">Email Brain AI</h1>
-                <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">Powered by IBM watsonx</p>
+                <h1 className="text-xl font-bold gradient-text">HackTheAgent</h1>
+                <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">AI Email Assistant</p>
               </div>
             </Link>
 
@@ -86,7 +86,7 @@ export default function Layout({ children }: LayoutProps) {
             <div>
               <div className="flex items-center space-x-2 mb-3">
                 <span className="text-2xl">🧠</span>
-                <span className="font-bold gradient-text text-lg">Email Brain AI</span>
+                <span className="font-bold gradient-text text-lg">HackTheAgent</span>
               </div>
               <p className="text-sm text-gray-600">
                 Intelligent email management powered by IBM watsonx and advanced AI
@@ -95,15 +95,15 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Quick Links */}
             <div>
-              <h3 className="font-bold text-gray-900 mb-3">Quick Links</h3>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Quick Links</h3>
               <ul className="space-y-2 text-sm">
                 <li>
-                  <Link href="/ai-agent" className="text-gray-600 hover:text-blue-600 transition-colors">
+                  <Link href="/ai-agent" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     AI Agent
                   </Link>
                 </li>
                 <li>
-                  <Link href="/gmail-oauth" className="text-gray-600 hover:text-blue-600 transition-colors">
+                  <Link href="/gmail-oauth" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                     Gmail Connection
                   </Link>
                 </li>
@@ -112,7 +112,7 @@ export default function Layout({ children }: LayoutProps) {
                     href="http://localhost:8000/docs"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-600 hover:text-blue-600 transition-colors"
+                    className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     API Documentation
                   </a>
@@ -122,18 +122,18 @@ export default function Layout({ children }: LayoutProps) {
 
             {/* Tech Stack */}
             <div>
-              <h3 className="font-bold text-gray-900 mb-3">Built With</h3>
+              <h3 className="font-bold text-gray-900 dark:text-white mb-3 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent">Built With</h3>
               <div className="flex flex-wrap gap-2">
-                <span className="glass px-3 py-1 rounded-full text-xs font-medium">
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100/50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/50">
                   IBM watsonx
                 </span>
-                <span className="glass px-3 py-1 rounded-full text-xs font-medium">
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-indigo-100/50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/50">
                   FastAPI
                 </span>
-                <span className="glass px-3 py-1 rounded-full text-xs font-medium">
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-slate-100/50 dark:bg-slate-800/30 text-slate-700 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">
                   Next.js
                 </span>
-                <span className="glass px-3 py-1 rounded-full text-xs font-medium">
+                <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100/50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/50">
                   Tailwind CSS
                 </span>
               </div>

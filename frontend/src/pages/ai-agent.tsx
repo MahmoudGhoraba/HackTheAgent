@@ -41,7 +41,7 @@ export default function AIAgentPage() {
     // Add welcome message
     setMessages([{
       role: 'system',
-      content: 'Welcome! I\'m your Email Brain AI Agent.\n\nI can help you with your emails in natural language. Just ask me anything!\n\n**Examples:**\n• "What emails did I get about the project?"\n• "Summarize my unread emails"\n• "Find emails from John"\n• "Who sent me the most emails?"\n• "Organize my emails by category"\n\nI\'ll automatically load emails from ' + (gmailStatus?.authenticated ? 'your Gmail account' : 'the dataset') + ' when needed. No need to explicitly ask me to load them!',
+      content: 'Welcome! I\'m your Email Brain AI Agent.\n\nI can help you with your emails in natural language. Just ask me anything!\n\n**Examples:**\n• "What emails did I get about the project?"\n• "Summarize my unread emails"\n• "Find emails from John"\n• "Who sent me the most emails?"\n• "Organize my emails by category"\n• "Load 200 emails from Gmail"\n• "Show me 50 recent emails"\n\nYou can specify how many emails to load (1-500) by mentioning a number in your query. Default is 100.\n\nI\'ll automatically load emails from ' + (gmailStatus?.authenticated ? 'your Gmail account' : 'the dataset') + ' when needed. No need to explicitly ask me to load them!',
       timestamp: new Date()
     }]);
   }, []);
@@ -81,38 +81,56 @@ export default function AIAgentPage() {
     setWorkflow([]);
 
     try {
-      // Analyze user intent
-      const intent = analyzeIntent(userQuery);
-      
-      // Check if we need to load emails first
-      const needsEmails = await checkIfNeedsEmails(intent);
-      
-      if (needsEmails && intent.action !== 'load_emails') {
-        addMessage('assistant', 'I need to load emails first to answer your question. Let me do that...');
-        await loadEmailsWorkflow({
-          action: 'load_emails',
-          source: gmailStatus?.authenticated ? 'gmail' : 'file',
-          maxResults: 50,
-          query: ''
-        });
-      }
-      
-      if (intent.action === 'load_emails') {
-        await loadEmailsWorkflow(intent);
-      } else if (intent.action === 'search_emails') {
-        await searchEmailsWorkflow(intent);
-      } else if (intent.action === 'summarize_emails') {
-        await summarizeEmailsWorkflow(intent);
-      } else if (intent.action === 'classify_emails') {
-        await classifyEmailsWorkflow(intent);
-      } else if (intent.action === 'answer_question') {
-        await answerQuestionWorkflow(intent);
-      } else {
-        addMessage('assistant', 'I\'m not sure how to help with that. Try asking me to:\n• Search emails\n• Summarize emails\n• Classify emails\n• Answer questions about emails\n\nI\'ll automatically load emails when needed!');
+      // Extract number from query (e.g., "show me 50 emails" -> 50)
+      // If no number specified, use 100 as default (max 500 from backend)
+      const extractedNumber = extractNumber(userQuery);
+      const topK = extractedNumber ? Math.min(Math.max(extractedNumber, 1), 500) : 100;
+
+      // Call the unified orchestrator endpoint
+      const response = await api.post('/workflow/execute', {
+        question: userQuery,
+        top_k: topK
+      });
+
+      const execution = response.data;
+
+      // Update workflow visualization with all steps from orchestrator
+      const steps: WorkflowStep[] = execution.steps.map((step: any) => ({
+        step: step.description,
+        agent: step.agent,
+        status: step.status as 'pending' | 'running' | 'completed' | 'error',
+        result: step.result,
+        error: step.error
+      }));
+
+      setWorkflow(steps);
+
+      // Check if workflow completed successfully
+      if (execution.status === 'completed' && execution.result) {
+        const result = execution.result;
+        
+        if (result.answer) {
+          // Answer from RAG agent
+          addMessage('assistant', result.answer, result.citations);
+        } else if (result.search_results && result.search_results.length > 0) {
+          // Just search results
+          const summaryText = result.search_results
+            .slice(0, 3)
+            .map((email: any) => `• **${email.subject || 'No subject'}**\n  From: ${email.from || 'Unknown'}\n  Score: ${((email.score || 0) * 100).toFixed(0)}%`)
+            .join('\n');
+          
+          addMessage(
+            'assistant',
+            `Found ${result.search_results.length} matching emails:\n\n${summaryText}`
+          );
+        }
+      } else if (execution.status === 'error') {
+        addMessage('assistant', `Error: ${execution.error || 'Workflow failed'}`);
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
-      addMessage('assistant', `Error: ${err.message || 'Something went wrong'}`);
+      const errorMessage = err.response?.data?.detail || err.message || 'An error occurred';
+      setError(errorMessage);
+      addMessage('assistant', `Error: ${errorMessage}`);
     } finally {
       setLoading(false);
     }

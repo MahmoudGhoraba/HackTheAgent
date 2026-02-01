@@ -91,7 +91,7 @@ class SearchResponse(BaseModel):
 class RAGRequest(BaseModel):
     """Request for /tool/rag/answer"""
     question: str
-    top_k: int = Field(default=5, ge=1, le=20)
+    top_k: int = Field(default=100, ge=1, le=500, description="Number of emails to retrieve (1-500)")
 
 
 class Citation(BaseModel):
