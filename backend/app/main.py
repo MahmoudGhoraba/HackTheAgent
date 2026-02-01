@@ -31,6 +31,8 @@ from app.orchestrator import get_orchestrator, WorkflowExecution
 from app.ibm_orchestrate import orchestrate_all_agents, get_agent_orchestration_status
 from app.agent_registry_sdk import register_all_agents, get_agent_registry, get_hacktheagent_agents
 from app.threat_endpoints import register_threat_detection_endpoints
+from app.orchestrate_routes import router as orchestrate_router
+from app.watson_orchestrate import get_orchestrate_client
 
 # Configure logging
 logging.basicConfig(
@@ -1144,9 +1146,26 @@ async def get_gmail_labels():
 # Register threat detection endpoints (INNOVATION FEATURE)
 register_threat_detection_endpoints(app)
 
+# Register Watson Orchestrate routes
+app.include_router(orchestrate_router)
+
+# Initialize Watson Orchestrate on startup
+@app.on_event("startup")
+async def startup_orchestrate():
+    """Initialize Watson Orchestrate connection on app startup"""
+    try:
+        client = get_orchestrate_client()
+        agents = client.list_agents()
+        agent_count = len(agents.get("agents", []))
+        logger.info(f"✅ Watson Orchestrate connected! Found {agent_count} agents")
+        logger.info(f"🤖 Available agents: {', '.join([a.get('name') for a in agents.get('agents', [])])}")
+    except Exception as e:
+        logger.warning(f"⚠️  Watson Orchestrate connection failed (non-critical): {e}")
+
 logger.info("✅ HackTheAgent - Email Threat Detection System Ready")
 logger.info(f"📊 API Documentation: http://localhost:8000/docs")
 logger.info(f"🔐 Threat Detection: POST http://localhost:8000/security/threat-detection")
+logger.info(f"🤖 Watson Orchestrate: http://localhost:8000/docs#/Watson%20Orchestrate%20Integration")
 
 
 if __name__ == "__main__":
