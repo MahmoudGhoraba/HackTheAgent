@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  title: Semantic Indexer Tool
+  description: Creates semantic embeddings for emails
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Semantic Indexer API
+paths:
+  /index_email:
+    post:
+      summary: Index email semantically
+      description: Convert email content to semantic embeddings
+      operationId: index_email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_content:
+                  type: string
+                  description: The email content to index
+                email_id:
+                  type: string
+                  description: Unique identifier for the email
+              required:
+                - email_content
+                - email_id
+      responses:
+        '200':
+          description: Email indexed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  indexed:
+                    type: boolean
+                  embedding_id:
+                    type: string
+                  similarity_score:
+                    type: number

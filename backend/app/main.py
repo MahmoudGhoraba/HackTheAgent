@@ -1,11 +1,12 @@
 """
 FastAPI main application - HackTheAgent Email Brain Tool Server
 """
-from fastapi import FastAPI, HTTPException, status
+from fastapi import FastAPI, HTTPException, status, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
-from typing import Dict
+from typing import Dict, Optional
+from datetime import datetime
 
 from app.config import settings
 from app.schemas import (
@@ -13,7 +14,10 @@ from app.schemas import (
     IndexRequest, IndexResponse, SearchRequest, SearchResponse,
     RAGRequest, RAGResponse, ErrorResponse,
     ClassifyRequest, ClassifyResponse, ThreadsResponse,
-    AnalyticsResponse, SearchStatsResponse, EmailThread
+    AnalyticsResponse, SearchStatsResponse, EmailThread,
+    OAuthUrlResponse, OAuthCallbackRequest, OAuthTokenResponse,
+    GmailProfileResponse, GmailFetchRequest, GmailFetchResponse,
+    GmailAuthStatusResponse, GmailEmailResponse
 )
 from app.load import load_emails
 from app.normalize import normalize_emails
@@ -22,6 +26,14 @@ from app.rag import get_rag_engine
 from app.classify import classifier, thread_detector
 from app.analytics import email_analytics, search_analytics
 from app.cache import cache
+from app.gmail_oauth import gmail_service
+from app.orchestrator import get_orchestrator, WorkflowExecution
+from app.ibm_orchestrate import orchestrate_all_agents, get_agent_orchestration_status
+from app.agent_registry_sdk import register_all_agents, get_agent_registry, get_hacktheagent_agents
+from app.threat_endpoints import register_threat_detection_endpoints
+from app.orchestrate_routes import router as orchestrate_router
+from app.watson_orchestrate import get_orchestrate_client
+from app.routes.workflow import router as workflow_router
 
 # Configure logging
 logging.basicConfig(
@@ -91,25 +103,40 @@ async def root() -> Dict[str, str]:
     "/tool/emails/load",
     response_model=EmailsResponse,
     tags=["Email Tools"],
-    summary="Load raw emails from dataset",
-    description="Fetches raw emails from the local JSON dataset file"
+    summary="Load raw emails from dataset or Gmail",
+    description="Fetches raw emails from local JSON dataset file or Gmail (if authenticated)"
 )
-async def load_emails_endpoint():
+async def load_emails_endpoint(
+    source: str = Query("file", description="Source: 'file' or 'gmail'"),
+    max_results: int = Query(100, ge=1, le=500, description="Max emails to fetch (Gmail only)"),
+    query: str = Query("", description="Gmail search query (Gmail only)")
+):
     """
-    Load raw emails from the dataset
+    Load raw emails from dataset or Gmail
+    
+    Args:
+        source: "file" for JSON dataset, "gmail" for Gmail API
+        max_results: Maximum number of emails to fetch (for Gmail)
+        query: Gmail search query (for Gmail)
     
     Returns:
         EmailsResponse: List of raw emails
     """
     try:
-        logger.info("Loading emails from dataset")
-        response = load_emails()
-        logger.info(f"Successfully loaded {len(response.emails)} emails")
+        logger.info(f"Loading emails from {source}")
+        response = load_emails(source=source, max_results=max_results, query=query)
+        logger.info(f"Successfully loaded {len(response.emails)} emails from {source}")
         return response
     except FileNotFoundError as e:
         logger.error(f"Email file not found: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+    except ValueError as e:
+        logger.error(f"Value error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
     except Exception as e:
@@ -253,6 +280,424 @@ async def rag_answer_endpoint(request: RAGRequest):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate answer: {str(e)}"
+        )
+
+
+# ==================== ORCHESTRATOR / WORKFLOW ====================
+
+@app.post(
+    "/workflow/execute",
+    tags=["Orchestrator"],
+    summary="Execute multi-agent workflow",
+    description="Executes coordinated multi-agent workflow: Intent Detection → Semantic Search → Classification → RAG Generation"
+)
+async def execute_workflow_endpoint(request: RAGRequest):
+    """
+    Execute the full multi-agent IBM Orchestrate-inspired workflow.
+    
+    Workflow steps:
+    1. Intent Detection Agent - Analyzes user query
+    2. Semantic Search Agent - Searches emails by meaning
+    3. Classification Agent - Prioritizes results
+    4. RAG Generation Agent - Generates grounded answer
+    
+    Args:
+        request: RAGRequest with question and top_k
+        
+    Returns:
+        WorkflowExecution: Complete workflow execution record with all steps
+    """
+    try:
+        logger.info(f"Starting workflow execution for: '{request.question}'")
+        orchestrator = get_orchestrator()
+        execution = await orchestrator.execute_workflow(
+            query=request.question,
+            top_k=request.top_k,
+            enable_rag=True
+        )
+        logger.info(f"Workflow execution completed: {execution.execution_id}")
+        
+        return execution.to_dict()
+    except Exception as e:
+        logger.error(f"Error executing workflow: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Workflow execution failed: {str(e)}"
+        )
+
+
+@app.get(
+    "/workflow/execution/{execution_id}",
+    tags=["Orchestrator"],
+    summary="Get workflow execution details",
+    description="Retrieves detailed execution record for a specific workflow run"
+)
+async def get_workflow_execution(execution_id: str):
+    """
+    Get details of a specific workflow execution
+    
+    Args:
+        execution_id: The execution ID to retrieve
+        
+    Returns:
+        WorkflowExecution: Execution record with all steps and results
+    """
+    try:
+        orchestrator = get_orchestrator()
+        execution = orchestrator.get_execution(execution_id)
+        
+        if not execution:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Execution {execution_id} not found"
+            )
+        
+        return execution.to_dict()
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error retrieving execution: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve execution: {str(e)}"
+        )
+
+
+@app.get(
+    "/workflow/recent",
+    tags=["Orchestrator"],
+    summary="Get recent workflow executions",
+    description="Retrieves list of recent workflow executions"
+)
+async def get_recent_workflows(limit: int = Query(10, ge=1, le=100)):
+    """
+    Get recent workflow executions
+    
+    Args:
+        limit: Maximum number of executions to return (1-100)
+        
+    Returns:
+        List of recent workflow executions
+    """
+    try:
+        orchestrator = get_orchestrator()
+        executions = orchestrator.list_recent_executions(limit=limit)
+        return [e.to_dict() for e in executions]
+    except Exception as e:
+        logger.error(f"Error retrieving recent workflows: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve workflows: {str(e)}"
+        )
+
+
+# ==================== IBM ORCHESTRATE INTEGRATION ====================
+
+@app.post(
+    "/orchestrate/agents/execute",
+    tags=["IBM Orchestrate"],
+    summary="Execute all agents through IBM Orchestrate",
+    description="Orchestrates all 6 agents through IBM Orchestrate platform"
+)
+async def execute_agents_via_orchestrate(request: RAGRequest):
+    """
+    Execute all agents through IBM Orchestrate orchestration platform.
+    
+    This shows all 6 agents (Intent Detection, Semantic Search, Classification,
+    RAG Generation, Threat Detection, Database Persistence) being orchestrated
+    through IBM Orchestrate as if using the enterprise platform.
+    
+    Agents executed:
+    1. Intent Detection Agent - Parse user query and extract intent
+    2. Semantic Search Agent - Search emails by meaning
+    3. Classification Agent - Categorize and prioritize results
+    4. RAG Generation Agent - Generate grounded answers with citations
+    5. Threat Detection Agent - Analyze emails for security threats
+    6. Database Persistence Agent - Store workflow results
+    
+    Args:
+        request: Query with question and top_k results
+        
+    Returns:
+        Complete orchestration execution with all agent results
+    """
+    try:
+        logger.info(f"Executing agents through IBM Orchestrate for: '{request.question}'")
+        
+        # Execute all agents through IBM Orchestrate
+        execution = await orchestrate_all_agents(
+            user_query=request.question,
+            top_k=request.top_k
+        )
+        
+        logger.info(f"IBM Orchestrate execution completed: {execution.execution_id}")
+        
+        return {
+            "execution_id": execution.execution_id,
+            "workflow_id": execution.workflow_id,
+            "orchestration_id": execution.orchestration_id,
+            "status": execution.status,
+            "agents_count": len(execution.agents),
+            "agents": [
+                {
+                    "agent_id": agent.agent_id,
+                    "agent_type": agent.agent_type.value,
+                    "agent_name": agent.agent_name,
+                    "status": agent.status,
+                    "duration_ms": agent.duration_ms,
+                    "output": agent.output_data
+                } for agent in execution.agents
+            ],
+            "start_time": execution.start_time,
+            "end_time": execution.end_time,
+            "duration_ms": execution.duration_ms,
+            "error": execution.error
+        }
+    except Exception as e:
+        logger.error(f"Error executing agents via Orchestrate: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"IBM Orchestrate agent execution failed: {str(e)}"
+        )
+
+
+@app.get(
+    "/orchestrate/agents/status/{execution_id}",
+    tags=["IBM Orchestrate"],
+    summary="Get IBM Orchestrate agent execution status",
+    description="Retrieves status and results of agent orchestration"
+)
+async def get_orchestrate_agent_status(execution_id: str):
+    """
+    Get status of orchestrated agent execution from IBM Orchestrate
+    
+    Args:
+        execution_id: The orchestration execution ID
+        
+    Returns:
+        Status and results of agent orchestration
+    """
+    try:
+        status_info = await get_agent_orchestration_status(execution_id)
+        return status_info
+    except Exception as e:
+        logger.error(f"Error retrieving orchestrate status: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve orchestration status: {str(e)}"
+        )
+
+
+# ==================== AGENT REGISTRATION ====================
+
+@app.post(
+    "/orchestrate/agents/register",
+    tags=["Agent Registration"],
+    summary="Register all agents with IBM Orchestrate",
+    description="Exports all local HackTheAgent agents to IBM Orchestrate platform"
+)
+async def register_agents_endpoint():
+    """
+    Register all 6 HackTheAgent agents with IBM Orchestrate
+    
+    This makes all agents visible and available in the Orchestrate platform:
+    1. Intent Detection Agent
+    2. Semantic Search Agent
+    3. Classification Agent
+    4. RAG Answer Generation Agent
+    5. Threat Detection Agent
+    6. Database Persistence Agent
+    
+    Each agent is registered with:
+    - Full capability definitions
+    - Tool descriptions
+    - Input/output schemas
+    - Endpoint configurations
+    
+    Returns:
+        Registration status and results
+    """
+    try:
+        logger.info("Starting agent registration with IBM Orchestrate...")
+        
+        result = await register_all_agents()
+        
+        # Check if registration had errors
+        if "error" in result:
+            logger.error(f"Agent registration error: {result.get('error')}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"IBM Orchestrate registration failed: {result.get('error')}"
+            )
+        
+        logger.info(f"Agent registration completed: {result}")
+        
+        return {
+            "status": "success",
+            "message": "All agents registered successfully",
+            "agents_registered": 6,
+            "agents": [
+                "Intent Detection Agent",
+                "Semantic Search Agent",
+                "Classification Agent",
+                "RAG Answer Generation Agent",
+                "Threat Detection Agent",
+                "Database Persistence Agent"
+            ],
+            "details": result,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error registering agents: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Agent registration failed: {str(e)}"
+        )
+
+
+@app.get(
+    "/orchestrate/agents/list",
+    tags=["Agent Registration"],
+    summary="List agents in IBM Orchestrate",
+    description="Lists all agents registered in the IBM Orchestrate platform"
+)
+async def list_orchestrate_agents():
+    """
+    List all agents registered in IBM Orchestrate
+    
+    Returns:
+        List of registered agents with their definitions
+    """
+    try:
+        registry = get_agent_registry()
+        
+        if not registry:
+            return {
+                "status": "not_configured",
+                "message": "Orchestrator not configured",
+                "agents": []
+            }
+        
+        agents = await registry.list_registered_agents()
+        
+        return {
+            "status": "success",
+            "agents_count": len(agents),
+            "agents": agents,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error listing agents: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to list agents: {str(e)}"
+        )
+
+
+@app.get(
+    "/orchestrate/agents/definitions",
+    tags=["Agent Registration"],
+    summary="Get agent definitions",
+    description="Returns definitions of all HackTheAgent agents for export"
+)
+async def get_agent_definitions():
+    """
+    Get definitions of all HackTheAgent agents
+    
+    Useful for exporting agent definitions to external systems
+    
+    Returns:
+        Complete agent definitions with capabilities and tools
+    """
+    try:
+        agents = get_hacktheagent_agents()
+        
+        return {
+            "status": "success",
+            "agents_count": len(agents),
+            "agents": [
+                {
+                    "agent_id": agent.agent_id,
+                    "agent_name": agent.agent_name,
+                    "agent_type": agent.agent_type,
+                    "description": agent.description,
+                    "version": agent.version,
+                    "status": agent.status,
+                    "input_schema": agent.input_schema,
+                    "output_schema": agent.output_schema,
+                    "capabilities": [
+                        {
+                            "tool_id": cap.tool_id,
+                            "tool_name": cap.tool_name,
+                            "description": cap.description,
+                            "input_schema": cap.input_schema,
+                            "output_schema": cap.output_schema
+                        } for cap in agent.capabilities
+                    ],
+                    "endpoints": agent.endpoints
+                } for agent in agents
+            ],
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting agent definitions: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get agent definitions: {str(e)}"
+        )
+
+
+@app.get(
+    "/orchestrate/agents/{agent_id}",
+    tags=["Agent Registration"],
+    summary="Get agent details from Orchestrate",
+    description="Retrieves details of a specific agent from IBM Orchestrate"
+)
+async def get_orchestrate_agent(agent_id: str):
+    """
+    Get details of a specific agent from IBM Orchestrate
+    
+    Args:
+        agent_id: The agent ID to retrieve
+        
+    Returns:
+        Agent definition and details
+    """
+    try:
+        registry = get_agent_registry()
+        
+        if not registry:
+            return {
+                "status": "not_configured",
+                "message": "Orchestrator not configured"
+            }
+        
+        agent = await registry.get_agent(agent_id)
+        
+        if not agent:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Agent {agent_id} not found"
+            )
+        
+        return {
+            "status": "success",
+            "agent": agent,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting agent: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get agent: {str(e)}"
         )
 
 
@@ -433,10 +878,299 @@ async def clear_search_analytics():
         return {"status": "cleared", "message": "Search history cleared successfully"}
     except Exception as e:
         logger.error(f"Error clearing search analytics: {str(e)}")
+
+
+@app.get(
+    "/analytics/performance",
+    tags=["Analytics"],
+    summary="Get performance analytics",
+    description="Get comprehensive performance metrics, benchmarks, and scalability data"
+)
+async def get_performance_analytics():
+    """Get comprehensive performance analytics"""
+    try:
+        from app.analytics_tracker import analytics_tracker
+        
+        logger.info("Retrieving performance analytics")
+        
+        # Get all analytics data
+        performance_metrics = analytics_tracker.get_performance_metrics()
+        benchmarks = analytics_tracker.get_benchmark_data()
+        scalability = analytics_tracker.get_scalability_data()
+        impact = analytics_tracker.get_impact_metrics()
+        system_health = analytics_tracker.get_system_health()
+        
+        response = {
+            "performance_metrics": performance_metrics,
+            "benchmarks": benchmarks,
+            "scalability": scalability,
+            "impact_metrics": impact,
+            "system_health": system_health
+        }
+        
+        logger.info("Successfully retrieved performance analytics")
+        return response
+    except Exception as e:
+        logger.error(f"Error retrieving performance analytics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve performance analytics: {str(e)}"
+        )
+
+
+# ==================== GMAIL OAUTH ENDPOINTS ====================
+
+@app.get(
+    "/oauth/gmail/authorize",
+    response_model=OAuthUrlResponse,
+    tags=["Gmail OAuth"],
+    summary="Get Gmail OAuth authorization URL",
+    description="Returns the URL for user to authorize Gmail access"
+)
+async def get_gmail_auth_url(state: Optional[str] = Query(None)):
+    """
+    Get Gmail OAuth authorization URL
+    
+    Args:
+        state: Optional state parameter for CSRF protection
+        
+    Returns:
+        OAuthUrlResponse: Authorization URL
+    """
+    try:
+        logger.info("Generating Gmail OAuth authorization URL")
+        auth_url = gmail_service.get_authorization_url(state=state)
+        return OAuthUrlResponse(authorization_url=auth_url, state=state)
+    except ValueError as e:
+        logger.error(f"Configuration error: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        logger.error(f"Error generating auth URL: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to generate authorization URL: {str(e)}"
+        )
+
+
+@app.post(
+    "/oauth/gmail/callback",
+    response_model=OAuthTokenResponse,
+    tags=["Gmail OAuth"],
+    summary="Handle Gmail OAuth callback",
+    description="Exchange authorization code for access token"
+)
+async def gmail_oauth_callback(request: OAuthCallbackRequest):
+    """
+    Handle OAuth callback and exchange code for token
+    
+    Args:
+        request: OAuthCallbackRequest with authorization code
+        
+    Returns:
+        OAuthTokenResponse: Token information
+    """
+    try:
+        logger.info("Processing Gmail OAuth callback")
+        token_info = gmail_service.exchange_code_for_token(request.code)
+        return OAuthTokenResponse(**token_info)
+    except Exception as e:
+        logger.error(f"Error exchanging code for token: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to exchange code for token: {str(e)}"
+        )
+
+
+@app.get(
+    "/oauth/gmail/status",
+    response_model=GmailAuthStatusResponse,
+    tags=["Gmail OAuth"],
+    summary="Check Gmail authentication status",
+    description="Check if user is authenticated with Gmail"
+)
+async def check_gmail_auth_status():
+    """Check Gmail authentication status"""
+    try:
+        is_authenticated = gmail_service.is_authenticated()
+        
+        email = None
+        if is_authenticated:
+            try:
+                profile = gmail_service.get_user_profile()
+                email = profile.get("email")
+            except Exception:
+                pass
+        
+        return GmailAuthStatusResponse(
+            authenticated=is_authenticated,
+            email=email
+        )
+    except Exception as e:
+        logger.error(f"Error checking auth status: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to check authentication status: {str(e)}"
+        )
+
+
+@app.delete(
+    "/oauth/gmail/revoke",
+    tags=["Gmail OAuth"],
+    summary="Revoke Gmail access",
+    description="Revoke OAuth token and delete credentials"
+)
+async def revoke_gmail_access():
+    """Revoke Gmail OAuth access"""
+    try:
+        logger.info("Revoking Gmail access")
+        gmail_service.revoke_token()
+        return {"status": "revoked", "message": "Gmail access revoked successfully"}
+    except Exception as e:
+        logger.error(f"Error revoking access: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to revoke access: {str(e)}"
+        )
+
+
+@app.get(
+    "/gmail/profile",
+    response_model=GmailProfileResponse,
+    tags=["Gmail"],
+    summary="Get Gmail user profile",
+    description="Get authenticated user's Gmail profile information"
+)
+async def get_gmail_profile():
+    """Get Gmail user profile"""
+    try:
+        if not gmail_service.is_authenticated():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated. Please authenticate with Gmail first."
+            )
+        
+        logger.info("Fetching Gmail profile")
+        profile = gmail_service.get_user_profile()
+        return GmailProfileResponse(**profile)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching profile: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch profile: {str(e)}"
+        )
+
+
+@app.post(
+    "/gmail/fetch",
+    response_model=GmailFetchResponse,
+    tags=["Gmail"],
+    summary="Fetch emails from Gmail",
+    description="Fetch emails from authenticated Gmail account"
+)
+async def fetch_gmail_emails(request: GmailFetchRequest):
+    """
+    Fetch emails from Gmail
+    
+    Args:
+        request: GmailFetchRequest with max_results and query
+        
+    Returns:
+        GmailFetchResponse: List of fetched emails
+    """
+    try:
+        if not gmail_service.is_authenticated():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated. Please authenticate with Gmail first."
+            )
+        
+        logger.info(f"Fetching {request.max_results} emails with query: '{request.query}'")
+        emails = gmail_service.fetch_emails(
+            max_results=request.max_results,
+            query=request.query
+        )
+        
+        # Convert to response format
+        email_responses = [GmailEmailResponse(**email) for email in emails]
+        
+        return GmailFetchResponse(
+            emails=email_responses,
+            count=len(email_responses)
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching emails: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch emails: {str(e)}"
+        )
+
+
+@app.get(
+    "/gmail/labels",
+    tags=["Gmail"],
+    summary="Get Gmail labels",
+    description="Get all labels from authenticated Gmail account"
+)
+async def get_gmail_labels():
+    """Get Gmail labels"""
+    try:
+        if not gmail_service.is_authenticated():
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Not authenticated. Please authenticate with Gmail first."
+            )
+        
+        logger.info("Fetching Gmail labels")
+        labels = gmail_service.get_labels()
+        return {"labels": labels, "count": len(labels)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching labels: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to fetch labels: {str(e)}"
+        )
+
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to clear search analytics: {str(e)}"
         )
+
+# Register threat detection endpoints (INNOVATION FEATURE)
+register_threat_detection_endpoints(app)
+
+# Register Watson Orchestrate routes
+app.include_router(orchestrate_router)
+
+# Register Workflow Execution routes (multi-agent orchestration)
+app.include_router(workflow_router)
+
+# Initialize Watson Orchestrate on startup
+@app.on_event("startup")
+async def startup_orchestrate():
+    """Initialize Watson Orchestrate connection on app startup"""
+    try:
+        client = get_orchestrate_client()
+        agents = client.list_agents()
+        agent_count = len(agents.get("agents", []))
+        logger.info(f"✅ Watson Orchestrate connected! Found {agent_count} agents")
+        logger.info(f"🤖 Available agents: {', '.join([a.get('name') for a in agents.get('agents', [])])}")
+    except Exception as e:
+        logger.warning(f"⚠️  Watson Orchestrate connection failed (non-critical): {e}")
+
+logger.info("✅ HackTheAgent - Email Threat Detection System Ready")
+logger.info(f"📊 API Documentation: http://localhost:8000/docs")
+logger.info(f"🔐 Threat Detection: POST http://localhost:8000/security/threat-detection")
+logger.info(f"🤖 Watson Orchestrate: http://localhost:8000/docs#/Watson%20Orchestrate%20Integration")
+
 
 if __name__ == "__main__":
     import uvicorn

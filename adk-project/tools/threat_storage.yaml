@@ -1,0 +1,51 @@
+openapi: 3.0.0
+info:
+  title: Threat Storage Tool
+  description: Stores threat analysis findings to secure storage
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Threat Storage API
+paths:
+  /store_threat:
+    post:
+      summary: Store threat analysis
+      description: Archive security alerts and threat intelligence
+      operationId: store_threat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                threat_id:
+                  type: string
+                  description: Unique threat identifier
+                threat_type:
+                  type: string
+                  description: Type of threat detected
+                threat_data:
+                  type: object
+                  description: Threat analysis data
+                severity:
+                  type: string
+                  description: Threat severity level
+              required:
+                - threat_id
+                - threat_type
+                - threat_data
+      responses:
+        '200':
+          description: Threat stored successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stored:
+                    type: boolean
+                  storage_id:
+                    type: string
+                  timestamp:
+                    type: string

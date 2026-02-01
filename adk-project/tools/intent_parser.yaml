@@ -1,0 +1,40 @@
+openapi: 3.0.0
+info:
+  title: Intent Parser Tool
+  description: Extracts the primary intent from user queries
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Intent Parser API
+paths:
+  /parse_intent:
+    post:
+      summary: Parse user query intent
+      description: Extract primary intent from user queries
+      operationId: parse_intent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: The user query to parse
+              required:
+                - query
+      responses:
+        '200':
+          description: Intent parsed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  intent:
+                    type: string
+                    description: The detected intent
+                  confidence:
+                    type: number
+                    description: Confidence score (0-1)

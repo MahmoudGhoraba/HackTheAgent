@@ -1,0 +1,53 @@
+openapi: 3.0.0
+info:
+  title: Analytics Logger Tool
+  description: Logs analytics events for reporting and monitoring
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Analytics Logger API
+paths:
+  /log_analytics:
+    post:
+      summary: Log analytics event
+      description: Record performance metrics and analytics data
+      operationId: log_analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                event_type:
+                  type: string
+                  description: Type of event to log
+                metric_name:
+                  type: string
+                  description: Name of metric being tracked
+                metric_value:
+                  type: number
+                  description: Value of the metric
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  description: Tags for filtering
+              required:
+                - event_type
+                - metric_name
+                - metric_value
+      responses:
+        '200':
+          description: Analytics logged successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logged:
+                    type: boolean
+                  log_id:
+                    type: string
+                  timestamp:
+                    type: string

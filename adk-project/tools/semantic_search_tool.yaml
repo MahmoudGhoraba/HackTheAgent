@@ -1,0 +1,48 @@
+openapi: 3.0.0
+info:
+  title: Semantic Search Tool
+  description: Searches indexed emails using semantic similarity
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Semantic Search API
+paths:
+  /semantic_search:
+    post:
+      summary: Semantic search emails
+      description: Find emails based on meaning and similarity
+      operationId: semantic_search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                  description: The semantic search query
+                threshold:
+                  type: number
+                  description: Minimum similarity score (0-1)
+              required:
+                - query
+      responses:
+        '200':
+          description: Search completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email_id:
+                          type: string
+                        similarity_score:
+                          type: number
+                        preview:
+                          type: string

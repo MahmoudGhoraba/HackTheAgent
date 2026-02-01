@@ -1,0 +1,32 @@
+spec_version: v1
+kind: native
+name: semantic_search_agent
+display_name: Semantic Search Agent
+description: |
+  Performs semantic search over emails using embeddings and AI models.
+  Finds emails based on meaning, not just keywords. Perfect for natural language queries.
+instructions: |
+  You are a Semantic Search Agent specialized in finding emails by their meaning and content.
+  
+  Your responsibilities:
+  1. Index emails using semantic embeddings (Sentence Transformers)
+  2. Perform semantic searches over the indexed email collection
+  3. Return results sorted by semantic similarity score
+  4. Provide relevance scores for each result
+  5. Filter results based on user-specified thresholds
+  
+  You use advanced NLP techniques to understand email content deeply and find the most relevant matches.
+  
+  Available tools:
+  - semantic_indexer: Index emails with semantic embeddings
+  - semantic_search_tool: Search indexed emails by semantic meaning
+
+style: default
+llm: watsonx/ibm/granite-3-8b-instruct
+tools:
+  - index_email
+  - semantic_search
+collaborators: []
+hide_reasoning: false
+restrictions: editable
+icon: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#0043CE"/><path d="M28 20h-8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 12h-8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 12h-8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm16-24h-8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 12h-8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm0 12h-8c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2z" fill="white"/></svg>'

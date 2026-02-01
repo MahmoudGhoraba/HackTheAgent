@@ -43,13 +43,35 @@ class Settings(BaseSettings):
     llm_provider: str = "watsonx"  # or "openai", "ollama"
     llm_model: str = "ibm/granite-13b-chat-v2"
     llm_temperature: float = 0.1
-    llm_max_tokens: int = 500
+    llm_max_tokens: int = 2048
     
     # API Keys (optional, loaded from environment)
     watsonx_api_key: Optional[str] = None
     watsonx_project_id: Optional[str] = None
     watsonx_url: Optional[str] = "https://us-south.ml.cloud.ibm.com"
     openai_api_key: Optional[str] = None
+    
+    # IBM Orchestrate Settings (Optional - for production)
+    orchestrator_api_key: Optional[str] = None
+    orchestrator_base_url: Optional[str] = "https://api.jp-tok.watson-orchestrate.cloud.ibm.com"
+    
+    # Gmail OAuth Settings
+    gmail_client_id: Optional[str] = None
+    gmail_client_secret: Optional[str] = None
+    gmail_redirect_uri: str = "http://localhost:3000/oauth/callback"
+    gmail_scopes: list = [
+        "openid",
+        "https://www.googleapis.com/auth/userinfo.email",
+        "https://www.googleapis.com/auth/gmail.readonly",
+        "https://www.googleapis.com/auth/gmail.modify"
+    ]
+    gmail_token_file: str = "gmail_token.json"
+    
+    # Outlook OAuth Settings (Microsoft Graph)
+    outlook_client_id: Optional[str] = None
+    outlook_client_secret: Optional[str] = None
+    outlook_tenant_id: str = "common"  # 'common' for multi-tenant, or specific tenant ID
+    outlook_redirect_uri: str = "http://localhost:8000/oauth/outlook/callback"
     
     # Redis Cache (optional)
     redis_url: Optional[str] = None  # e.g., "redis://localhost:6379/0"
@@ -58,10 +80,19 @@ class Settings(BaseSettings):
     # CORS
     cors_origins: list = ["*"]
     
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "case_sensitive": False,
+        "extra": "ignore"  # Ignore extra fields from .env
+    }
+    
+    def __init__(self, **data):
+        """Custom init to ensure env vars are loaded"""
+        super().__init__(**data)
+        # Debug: print what was loaded
+        # print(f"[DEBUG] orchestrator_api_key: {self.orchestrator_api_key}")
+        # print(f"[DEBUG] orchestrator_base_url: {self.orchestrator_base_url}")
 
 
 # Global settings instance

@@ -1,0 +1,43 @@
+openapi: 3.0.0
+info:
+  title: Category Classifier Tool
+  description: Classifies emails into predefined categories
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Category Classifier API
+paths:
+  /classify_category:
+    post:
+      summary: Classify email category
+      description: Analyze email and classify into categories
+      operationId: classify_category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_content:
+                  type: string
+                  description: The email content to classify
+                subject:
+                  type: string
+                  description: Email subject line
+              required:
+                - email_content
+      responses:
+        '200':
+          description: Classification completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    type: string
+                  confidence:
+                    type: number
+                  explanation:
+                    type: string

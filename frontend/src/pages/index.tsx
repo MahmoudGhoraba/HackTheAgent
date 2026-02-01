@@ -1,199 +1,138 @@
-import Head from 'next/head';
-import { useState } from 'react';
-import { semanticSearch, SearchResult } from '@/lib/api';
-import Card from '@/components/Card';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import Button from '@/components/Button';
-import LoadingSpinner from '@/components/LoadingSpinner';
-import Alert from '@/components/Alert';
+import { BrainIcon, SearchIcon, RobotIcon, ChartIcon, MailIcon, ChevronDownIcon } from '@/components/Icons';
 
 export default function Home() {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<SearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [topK, setTopK] = useState(5);
+  const router = useRouter();
+  const [mounted, setMounted] = useState(false);
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
-    
-    setLoading(true);
-    setError(null);
-    try {
-      const searchResults = await semanticSearch(query, topK);
-      setResults(searchResults);
-    } catch (err: any) {
-      setError(err.message || 'Failed to perform search. Make sure the backend is running.');
-      setResults([]);
-    } finally {
-      setLoading(false);
-    }
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleGetStarted = () => {
+    router.push('/ai-agent');
   };
 
-  const exampleQueries = [
-    { text: 'urgent deadlines', icon: '⏰' },
-    { text: 'IBM hackathon', icon: '🏆' },
-    { text: 'invoice payment', icon: '💰' },
-    { text: 'security vulnerabilities', icon: '🔒' },
-    { text: 'meeting schedule', icon: '📅' },
-  ];
+  const handleConnectGmail = () => {
+    router.push('/gmail-oauth');
+  };
 
   return (
-    <>
-      <Head>
-        <title>Semantic Search - HackTheAgent</title>
-        <meta name="description" content="Search emails by meaning, not just keywords" />
-      </Head>
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/20 dark:bg-blue-600/20 rounded-full blur-3xl float"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-blue-300/20 dark:bg-blue-500/20 rounded-full blur-3xl float" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-200/10 dark:bg-blue-400/10 rounded-full blur-3xl float" style={{ animationDelay: '2s' }}></div>
+      </div>
 
-      <div className="max-w-6xl mx-auto">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            🔍 Semantic Email Search
+      {/* Main content */}
+      <div className={`relative z-10 max-w-5xl mx-auto text-center space-y-8 ${mounted ? 'fade-in' : 'opacity-0'}`}>
+        {/* Logo and title */}
+        <div className="space-y-4">
+          <div className="inline-block">
+            <BrainIcon className="w-32 h-32 text-blue-600 dark:text-blue-400 mx-auto mb-6 float" />
+          </div>
+          <h1 className="text-6xl md:text-7xl font-bold gradient-text mb-4">
+            HackTheAgent
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Find emails by meaning, not just keywords. Our AI understands context and intent.
+          <p className="text-2xl md:text-3xl text-gray-900 dark:text-white font-bold max-w-3xl mx-auto mb-3">
+            Intelligent Email Intelligence with <span className="text-blue-600 dark:text-blue-400">Multi-Agent AI Orchestration</span>
+          </p>
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-medium max-w-3xl mx-auto">
+            Advanced threat detection, semantic search, and multi-agent workflows powered by{' '}
+            <span className="font-bold text-blue-600 dark:text-blue-400">IBM Orchestrate</span> &{' '}
+            <span className="font-bold text-blue-600 dark:text-blue-400">IBM Granite</span>
           </p>
         </div>
 
-        {/* Search Box */}
-        <Card className="mb-8">
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              <input
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                placeholder="Search emails by meaning... (e.g., 'urgent deadlines')"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-lg"
-              />
-              <Button onClick={handleSearch} loading={loading} size="lg">
-                Search
-              </Button>
-            </div>
-
-            {/* Top K Selector */}
-            <div className="flex items-center space-x-4">
-              <label className="text-sm font-medium text-gray-700">Results to show:</label>
-              <select
-                value={topK}
-                onChange={(e) => setTopK(Number(e.target.value))}
-                className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
-              >
-                <option value={3}>3</option>
-                <option value={5}>5</option>
-                <option value={10}>10</option>
-                <option value={15}>15</option>
-              </select>
-            </div>
+        {/* Feature highlights */}
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 ${mounted ? 'slide-in-left' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
+          <div className="glass rounded-2xl p-6 hover-lift hover-glow">
+            <SearchIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Semantic Search & RAG</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              Find emails by meaning, not keywords. Generate intelligent answers with retrieval-augmented generation.
+            </p>
           </div>
-        </Card>
-
-        {/* Error Alert */}
-        {error && (
-          <Alert type="error" onClose={() => setError(null)} className="mb-8">
-            <p className="font-medium">Search Error</p>
-            <p className="text-sm mt-1">{error}</p>
-          </Alert>
-        )}
-
-        {/* Loading State */}
-        {loading && (
-          <div className="py-12">
-            <LoadingSpinner size="lg" text="Searching emails..." />
+          
+          <div className="glass rounded-2xl p-6 hover-lift hover-glow" style={{ animationDelay: '0.1s' }}>
+            <RobotIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">6 Orchestrated Agents</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              Intent Detection, Classification, Semantic Search, RAG Generation, Database Persistence, and Threat Detection working in harmony.
+            </p>
           </div>
-        )}
-
-        {/* Results */}
-        {!loading && results.length > 0 && (
-          <div>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">
-                Found {results.length} relevant email{results.length !== 1 ? 's' : ''}
-              </h2>
-              <Button variant="secondary" size="sm" onClick={() => { setQuery(''); setResults([]); }}>
-                Clear Results
-              </Button>
-            </div>
-            
-            <div className="space-y-4">
-              {results.map((result, index) => (
-                <Card key={result.id || index} hover>
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-1">
-                        {result.subject}
-                      </h3>
-                      <p className="text-sm text-gray-500">
-                        📅 {result.date} • ID: {result.id}
-                      </p>
-                    </div>
-                    <div className="ml-4">
-                      <div className="px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-full text-sm font-bold shadow-md">
-                        {(result.score * 100).toFixed(1)}%
-                      </div>
-                      <p className="text-xs text-gray-500 text-center mt-1">relevance</p>
-                    </div>
-                  </div>
-                  <p className="text-gray-700 leading-relaxed">{result.snippet}</p>
-                </Card>
-              ))}
-            </div>
+          
+          <div className="glass rounded-2xl p-6 hover-lift hover-glow" style={{ animationDelay: '0.2s' }}>
+            <ChartIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Advanced Threat Detection</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
+              AI-powered phishing detection, domain analysis, malware recognition, and comprehensive threat scoring.
+            </p>
           </div>
-        )}
+        </div>
 
-        {/* Empty State */}
-        {!loading && results.length === 0 && query && !error && (
-          <Card className="text-center py-12">
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">No results found</h3>
-            <p className="text-gray-600">Try a different search query or check if emails are indexed.</p>
-          </Card>
-        )}
+        {/* CTA buttons */}
+        <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center mt-12 ${mounted ? 'scale-in' : 'opacity-0'}`} style={{ animationDelay: '0.4s' }}>
+          <Button
+            onClick={handleGetStarted}
+            className="gradient-primary text-white px-8 py-4 text-lg font-semibold rounded-xl hover-lift shadow-glow-blue min-w-[200px]"
+          >
+            Get Started →
+          </Button>
+          <Button
+            onClick={handleConnectGmail}
+            variant="secondary"
+            className="bg-white dark:bg-slate-700 border-2 border-blue-200 dark:border-blue-600 text-gray-900 dark:text-white px-8 py-4 text-lg font-semibold rounded-xl hover-lift min-w-[200px] flex items-center space-x-2 hover:bg-blue-50 dark:hover:bg-slate-600"
+          >
+            <MailIcon className="w-5 h-5" />
+            <span>Connect Gmail</span>
+          </Button>
+        </div>
 
-        {/* Example Queries */}
-        {!query && !loading && (
-          <div className="grid md:grid-cols-2 gap-6">
-            <Card>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                💡 Try these example searches
-              </h3>
-              <div className="space-y-2">
-                {exampleQueries.map((example) => (
-                  <button
-                    key={example.text}
-                    onClick={() => setQuery(example.text)}
-                    className="w-full flex items-center space-x-3 px-4 py-3 text-left text-primary-600 hover:bg-primary-50 rounded-lg transition-colors group"
-                  >
-                    <span className="text-2xl">{example.icon}</span>
-                    <span className="font-medium group-hover:underline">{example.text}</span>
-                  </button>
-                ))}
-              </div>
-            </Card>
-
-            <Card>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                ✨ How it works
-              </h3>
-              <div className="space-y-3 text-gray-700">
-                <div className="flex items-start space-x-3">
-                  <span className="text-2xl">1️⃣</span>
-                  <p><strong>Semantic Understanding:</strong> Searches by meaning, not just keywords</p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="text-2xl">2️⃣</span>
-                  <p><strong>AI Embeddings:</strong> Uses advanced ML models to understand context</p>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <span className="text-2xl">3️⃣</span>
-                  <p><strong>Ranked Results:</strong> Shows most relevant emails with confidence scores</p>
-                </div>
-              </div>
-            </Card>
+        {/* Stats */}
+        <div className={`grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto ${mounted ? 'fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
+          <div className="text-center">
+            <div className="text-3xl font-bold gradient-text">&lt;2s</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Email Search Time</div>
           </div>
-        )}
+          <div className="text-center">
+            <div className="text-3xl font-bold gradient-text">6 Agents</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Coordinated</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold gradient-text">AI-Powered</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Threat Detection</div>
+          </div>
+        </div>
+
+        {/* Tech stack badges */}
+        <div className={`flex flex-wrap justify-center gap-3 mt-12 ${mounted ? 'fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.8s' }}>
+          <span className="glass px-4 py-2 rounded-full text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950">
+            IBM Orchestrate
+          </span>
+          <span className="glass px-4 py-2 rounded-full text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950">
+            IBM Granite LLM
+          </span>
+          <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
+            FastAPI
+          </span>
+          <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
+            ChromaDB
+          </span>
+          <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
+            Gmail OAuth
+          </span>
+          <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
+            Threat Detection
+          </span>
+        </div>
       </div>
-    </>
+
+      {/* Scroll indicator */}
+    </div>
   );
 }

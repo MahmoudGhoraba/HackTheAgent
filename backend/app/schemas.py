@@ -91,7 +91,7 @@ class SearchResponse(BaseModel):
 class RAGRequest(BaseModel):
     """Request for /tool/rag/answer"""
     question: str
-    top_k: int = Field(default=5, ge=1, le=20)
+    top_k: int = Field(default=100, ge=1, le=500, description="Number of emails to retrieve (1-500)")
 
 
 class Citation(BaseModel):
@@ -177,3 +177,70 @@ class SearchStatsResponse(BaseModel):
     avg_results: float
     popular_queries: List[Dict[str, Any]]
     zero_result_queries: List[str]
+
+
+# Gmail OAuth Models
+class OAuthUrlResponse(BaseModel):
+    """Response for OAuth authorization URL"""
+    authorization_url: str
+    state: Optional[str] = None
+
+
+class OAuthCallbackRequest(BaseModel):
+    """Request for OAuth callback"""
+    code: str
+    state: Optional[str] = None
+
+
+class OAuthTokenResponse(BaseModel):
+    """Response for OAuth token exchange"""
+    access_token: str
+    refresh_token: Optional[str] = None
+    token_uri: str
+    client_id: str
+    scopes: List[str]
+    expiry: Optional[str] = None
+
+
+class GmailProfileResponse(BaseModel):
+    """Gmail user profile response"""
+    email: str
+    messages_total: int
+    threads_total: int
+    history_id: str
+
+
+class GmailFetchRequest(BaseModel):
+    """Request to fetch Gmail emails"""
+    max_results: int = Field(default=100, ge=1, le=500)
+    query: str = Field(default="", description="Gmail search query")
+
+
+class GmailEmailResponse(BaseModel):
+    """Single Gmail email"""
+    id: str
+    thread_id: str
+    subject: str
+    from_: str = Field(..., alias="from")
+    to: str
+    cc: Optional[str] = None
+    date: str
+    body: str
+    snippet: str
+    labels: List[str]
+    internal_date: str
+
+    class Config:
+        populate_by_name = True
+
+
+class GmailFetchResponse(BaseModel):
+    """Response for Gmail fetch"""
+    emails: List[GmailEmailResponse]
+    count: int
+
+
+class GmailAuthStatusResponse(BaseModel):
+    """Gmail authentication status"""
+    authenticated: bool
+    email: Optional[str] = None

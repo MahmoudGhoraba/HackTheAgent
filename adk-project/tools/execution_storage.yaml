@@ -1,0 +1,54 @@
+openapi: 3.0.0
+info:
+  title: Execution Storage Tool
+  description: Stores workflow execution records
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Execution Storage API
+paths:
+  /store_execution:
+    post:
+      summary: Store execution record
+      description: Persist execution results for audit and analysis
+      operationId: store_execution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                workflow_id:
+                  type: string
+                  description: ID of workflow execution
+                agent_name:
+                  type: string
+                  description: Name of agent executed
+                input_data:
+                  type: object
+                  description: Input to the agent
+                output_data:
+                  type: object
+                  description: Output from the agent
+                execution_time:
+                  type: number
+                  description: Execution time in seconds
+              required:
+                - workflow_id
+                - agent_name
+                - output_data
+      responses:
+        '200':
+          description: Execution stored successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stored:
+                    type: boolean
+                  record_id:
+                    type: string
+                  timestamp:
+                    type: string
