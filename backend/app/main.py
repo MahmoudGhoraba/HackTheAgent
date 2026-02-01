@@ -453,6 +453,45 @@ async def clear_search_analytics():
     except Exception as e:
         logger.error(f"Error clearing search analytics: {str(e)}")
 
+
+@app.get(
+    "/analytics/performance",
+    tags=["Analytics"],
+    summary="Get performance analytics",
+    description="Get comprehensive performance metrics, benchmarks, and scalability data"
+)
+async def get_performance_analytics():
+    """Get comprehensive performance analytics"""
+    try:
+        from app.analytics_tracker import analytics_tracker
+        
+        logger.info("Retrieving performance analytics")
+        
+        # Get all analytics data
+        performance_metrics = analytics_tracker.get_performance_metrics()
+        benchmarks = analytics_tracker.get_benchmark_data()
+        scalability = analytics_tracker.get_scalability_data()
+        impact = analytics_tracker.get_impact_metrics()
+        system_health = analytics_tracker.get_system_health()
+        
+        response = {
+            "performance_metrics": performance_metrics,
+            "benchmarks": benchmarks,
+            "scalability": scalability,
+            "impact_metrics": impact,
+            "system_health": system_health
+        }
+        
+        logger.info("Successfully retrieved performance analytics")
+        return response
+    except Exception as e:
+        logger.error(f"Error retrieving performance analytics: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve performance analytics: {str(e)}"
+        )
+
+
 # ==================== GMAIL OAUTH ENDPOINTS ====================
 
 @app.get(

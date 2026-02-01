@@ -268,18 +268,18 @@ class GmailOAuthService:
         """Parse Gmail message into structured format"""
         headers = {h['name']: h['value'] for h in message['payload'].get('headers', [])}
         
-        # Extract body
-        body = ""
-        if 'parts' in message['payload']:
-            for part in message['payload']['parts']:
-                if part['mimeType'] == 'text/plain':
-                    if 'data' in part['body']:
-                        import base64
-                        body = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8')
-                        break
-        elif 'body' in message['payload'] and 'data' in message['payload']['body']:
-            import base64
-            body = base64.urlsafe_b64decode(message['payload']['body']['data']).decode('utf-8')
+        # Extract body with better handling
+        body = self._extract_body(message['payload'])
+        
+        # If body is empty or too short, use snippet as fallback
+        if not body or len(body.strip()) < 10:
+            body = message.get('snippet', '(No content available)')
+        
+        # Clean up the body text
+        body = self._clean_email_body(body)
+        
+        # Also clean the snippet field
+        snippet = self._clean_email_body(message.get('snippet', ''))
         
         return {
             "id": message['id'],
@@ -290,10 +290,109 @@ class GmailOAuthService:
             "cc": headers.get('Cc', ''),
             "date": headers.get('Date', ''),
             "body": body,
-            "snippet": message.get('snippet', ''),
+            "snippet": snippet,
             "labels": message.get('labelIds', []),
             "internal_date": message.get('internalDate')
         }
+    
+    def _extract_body(self, payload: Dict[str, Any]) -> str:
+        """Extract email body from payload, handling multipart messages"""
+        import base64
+        
+        # Try to get plain text first
+        if 'parts' in payload:
+            for part in payload['parts']:
+                # Handle nested parts (multipart/alternative)
+                if 'parts' in part:
+                    text = self._extract_body(part)
+                    if text:
+                        return text
+                
+                # Get text/plain content
+                if part.get('mimeType') == 'text/plain':
+                    if 'data' in part.get('body', {}):
+                        try:
+                            return base64.urlsafe_b64decode(part['body']['data']).decode('utf-8', errors='ignore')
+                        except Exception as e:
+                            logger.error(f"Error decoding body: {e}")
+                            continue
+            
+            # If no plain text, try HTML and strip tags
+            for part in payload['parts']:
+                if 'parts' in part:
+                    text = self._extract_body(part)
+                    if text:
+                        return text
+                        
+                if part.get('mimeType') == 'text/html':
+                    if 'data' in part.get('body', {}):
+                        try:
+                            html_content = base64.urlsafe_b64decode(part['body']['data']).decode('utf-8', errors='ignore')
+                            return self._html_to_text(html_content)
+                        except Exception as e:
+                            logger.error(f"Error decoding HTML body: {e}")
+                            continue
+        
+        # Single part message
+        elif 'body' in payload and 'data' in payload['body']:
+            try:
+                content = base64.urlsafe_b64decode(payload['body']['data']).decode('utf-8', errors='ignore')
+                if payload.get('mimeType') == 'text/html':
+                    return self._html_to_text(content)
+                return content
+            except Exception as e:
+                logger.error(f"Error decoding single part body: {e}")
+        
+        return ""
+    
+    def _html_to_text(self, html: str) -> str:
+        """Convert HTML to plain text"""
+        import re
+        
+        # Remove script and style elements
+        html = re.sub(r'<script[^>]*>.*?</script>', '', html, flags=re.DOTALL | re.IGNORECASE)
+        html = re.sub(r'<style[^>]*>.*?</style>', '', html, flags=re.DOTALL | re.IGNORECASE)
+        
+        # Remove HTML tags
+        html = re.sub(r'<[^>]+>', ' ', html)
+        
+        # Decode HTML entities
+        html = html.replace('&nbsp;', ' ')
+        html = html.replace('<', '<')
+        html = html.replace('>', '>')
+        html = html.replace('&', '&')
+        html = html.replace('"', '"')
+        html = html.replace(''', "'")
+        html = html.replace(''', "'")
+        
+        # Clean up whitespace
+        html = re.sub(r'\s+', ' ', html)
+        html = html.strip()
+        
+        return html
+    
+    def _clean_email_body(self, body: str) -> str:
+        """Clean up email body text"""
+        import re
+        
+        # Remove excessively long URLs (likely tracking links)
+        body = re.sub(r'https?://[^\s]{100,}', '[Long URL removed]', body)
+        
+        # Remove email tracking parameters
+        body = re.sub(r'[?&]utm_[^&\s]+', '', body)
+        
+        # Clean up multiple newlines
+        body = re.sub(r'\n{3,}', '\n\n', body)
+        
+        # Remove leading/trailing whitespace
+        body = body.strip()
+        
+        # Limit body length to prevent overwhelming the UI
+        max_length = 5000
+        if len(body) > max_length:
+            body = body[:max_length] + "\n\n[Content truncated...]"
+        
+        return body
     
     def search_emails(self, query: str, max_results: int = 50) -> List[Dict[str, Any]]:
         """

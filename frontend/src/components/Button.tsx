@@ -2,7 +2,7 @@ import { ReactNode, ButtonHTMLAttributes } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'success' | 'danger';
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'gradient';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
 }
@@ -16,19 +16,20 @@ export default function Button({
   className = '',
   ...props
 }: ButtonProps) {
-  const baseStyles = 'font-medium rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'font-semibold rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center';
   
   const variantStyles = {
-    primary: 'bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800',
-    secondary: 'bg-gray-200 text-gray-800 hover:bg-gray-300 active:bg-gray-400',
-    success: 'bg-green-600 text-white hover:bg-green-700 active:bg-green-800',
-    danger: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800',
+    primary: 'gradient-primary text-white hover-lift shadow-lg hover:shadow-glow-blue',
+    secondary: 'glass text-gray-800 hover-lift border border-gray-200',
+    success: 'gradient-success text-white hover-lift shadow-lg hover:shadow-glow-green',
+    danger: 'bg-gradient-to-r from-red-600 to-red-700 text-white hover-lift shadow-lg hover:shadow-lg hover:shadow-red-500/50',
+    gradient: 'gradient-secondary text-white hover-lift shadow-lg',
   };
 
   const sizeStyles = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2 text-base',
-    lg: 'px-6 py-3 text-lg',
+    sm: 'px-4 py-2 text-sm',
+    md: 'px-5 py-2.5 text-base',
+    lg: 'px-8 py-4 text-lg',
   };
 
   return (
