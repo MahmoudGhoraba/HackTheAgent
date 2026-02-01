@@ -39,12 +39,12 @@ export default function Home() {
             HackTheAgent
           </h1>
           <p className="text-2xl md:text-3xl text-gray-900 dark:text-white font-bold max-w-3xl mx-auto mb-3">
-            Find critical emails in <span className="text-blue-600 dark:text-blue-400">seconds, not hours</span>
+            Intelligent Email Intelligence with <span className="text-blue-600 dark:text-blue-400">Multi-Agent AI Orchestration</span>
           </p>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 font-medium max-w-3xl mx-auto">
-            Multi-agent AI orchestration with{' '}
+            Advanced threat detection, semantic search, and multi-agent workflows powered by{' '}
             <span className="font-bold text-blue-600 dark:text-blue-400">IBM Orchestrate</span> &{' '}
-            <span className="font-bold text-blue-600 dark:text-blue-400">watsonx</span>
+            <span className="font-bold text-blue-600 dark:text-blue-400">IBM Granite</span>
           </p>
         </div>
 
@@ -52,25 +52,25 @@ export default function Home() {
         <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 ${mounted ? 'slide-in-left' : 'opacity-0'}`} style={{ animationDelay: '0.2s' }}>
           <div className="glass rounded-2xl p-6 hover-lift hover-glow">
             <SearchIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Semantic Search</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Semantic Search & RAG</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Understand intent, not just keywords. Find "urgent meetings" without typing those exact words.
+              Find emails by meaning, not keywords. Generate intelligent answers with retrieval-augmented generation.
             </p>
           </div>
           
           <div className="glass rounded-2xl p-6 hover-lift hover-glow" style={{ animationDelay: '0.1s' }}>
             <RobotIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Multi-Agent Orchestration</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">6 Orchestrated Agents</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Coordinated AI agents powered by IBM Orchestrate and watsonx for intelligent workflows.
+              Intent Detection, Classification, Semantic Search, RAG Generation, Database Persistence, and Threat Detection working in harmony.
             </p>
           </div>
           
           <div className="glass rounded-2xl p-6 hover-lift hover-glow" style={{ animationDelay: '0.2s' }}>
             <ChartIcon className="w-12 h-12 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Smart Prioritization</h3>
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Advanced Threat Detection</h3>
             <p className="text-gray-600 dark:text-gray-300 text-sm">
-              Automatically surfaces critical emails. Never miss important messages in the noise.
+              AI-powered phishing detection, domain analysis, malware recognition, and comprehensive threat scoring.
             </p>
           </div>
         </div>
@@ -97,15 +97,15 @@ export default function Home() {
         <div className={`grid grid-cols-3 gap-8 mt-16 max-w-2xl mx-auto ${mounted ? 'fade-in' : 'opacity-0'}`} style={{ animationDelay: '0.6s' }}>
           <div className="text-center">
             <div className="text-3xl font-bold gradient-text">&lt;2s</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Find Critical Email</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Email Search Time</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold gradient-text">99%</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Precision</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold gradient-text">3 Agents</div>
+            <div className="text-3xl font-bold gradient-text">6 Agents</div>
             <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Coordinated</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold gradient-text">AI-Powered</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400 mt-1">Threat Detection</div>
           </div>
         </div>
 
@@ -115,16 +115,19 @@ export default function Home() {
             IBM Orchestrate
           </span>
           <span className="glass px-4 py-2 rounded-full text-sm font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950">
-            IBM watsonx
+            IBM Granite LLM
           </span>
           <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
             FastAPI
           </span>
           <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
-            Next.js
+            ChromaDB
           </span>
           <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
-            RAG Pipeline
+            Gmail OAuth
+          </span>
+          <span className="glass px-4 py-2 rounded-full text-sm font-medium text-gray-700 dark:text-gray-200">
+            Threat Detection
           </span>
         </div>
       </div>

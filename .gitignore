@@ -29,3 +29,6 @@ frontend
 .env
 backend/.env
 frontend/.env
+backend/data/emails.db
+backend/app/vector_store/30a300c1-7620-44d6-9096-3c1a9a052e4d/length.bin
+backend/app/vector_store/30a300c1-7620-44d6-9096-3c1a9a052e4d/data_level0.bin
