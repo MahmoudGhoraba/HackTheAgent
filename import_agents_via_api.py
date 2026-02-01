@@ -12,11 +12,18 @@ import requests
 from pathlib import Path
 from typing import Dict, List, Tuple
 import time
+from dotenv import load_dotenv
 
-# Configuration
-ORCHESTRATE_API_URL = "https://api.jp-tok.watson-orchestrate.cloud.ibm.com/instances/0b4a8b3e-ac8a-4ee1-be2e-ac89c2a6a1e4/v1"
+# Load environment variables from .env file
+load_dotenv()
+
+# Configuration - Load from environment
+ORCHESTRATE_API_URL = os.getenv(
+    "ORCHESTRATE_API_URL",
+    "https://api.jp-tok.watson-orchestrate.cloud.ibm.com/instances/default/v1"
+)
 AGENTS_DIR = Path(__file__).parent / "backend" / "agents"
-IAM_URL = "https://iam.cloud.ibm.com/identity/token"
+IAM_URL = os.getenv("IBM_IAM_URL", "https://iam.cloud.ibm.com/identity/token")
 
 class OrchestrateAgentImporter:
     def __init__(self, api_key: str):
@@ -277,8 +284,8 @@ def main():
         print("\n" + "="*60)
         print("❌ Error: No API Key Provided")
         print("="*60 + "\n")
-        print("To use this script, set your API key:\n")
-        print("  export WATSON_ORCHESTRATE_API_KEY='OppiS4ojVge4xPtJF8G6fulSF-VqgPM6R9vilzCPazCo'\n")
+        print("To use this script, set your API key in .env or environment:\n")
+        print("  export WATSON_ORCHESTRATE_API_KEY='<your-api-key-from-ibm-cloud>'\n")
         print("Then run:")
         print("  python3 import_agents_via_api.py\n")
         print("="*60 + "\n")

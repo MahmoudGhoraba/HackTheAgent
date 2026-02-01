@@ -6,6 +6,8 @@ Switches to local orchestrator by resetting credentials to placeholder values
 
 from pathlib import Path
 import sys
+import os
+from dotenv import load_dotenv
 
 def fix_ibm_401():
     """Fix IBM Orchestrate 401 error"""
@@ -39,18 +41,24 @@ def fix_ibm_401():
                 print(f"  ✓ {line}")
     print()
     
-    # Replace with placeholder values
-    new_content = content.replace(
-        "ORCHESTRATOR_API_KEY=jpysL6EkLhp4vd_Tn5ecUVYxaB-ZxvjkWMfgJUgPJJvR",
-        "ORCHESTRATOR_API_KEY=your-orchestrate-api-key"
+    # Replace with placeholder values - remove any hardcoded API keys
+    new_content = content
+    
+    # Remove any hardcoded API key patterns
+    import re
+    # Replace any line that looks like a real API key with placeholder
+    new_content = re.sub(
+        r'(ORCHESTRATOR_API_KEY=)[a-zA-Z0-9\-_]{60,}',
+        r'\1your-orchestrate-api-key',
+        new_content
     )
     
-    # Also normalize the URL to the simpler form (system will append /instances/ from the one you have if needed)
-    if "ORCHESTRATOR_BASE_URL=https://api.jp-tok.watson-orchestrate.cloud.ibm.com/instances/" in new_content:
-        new_content = new_content.replace(
-            "ORCHESTRATOR_BASE_URL=https://api.jp-tok.watson-orchestrate.cloud.ibm.com/instances/0b4a8b3e-ac8a-4ee1-be2e-ac89c2a6a1e4",
-            "ORCHESTRATOR_BASE_URL=https://api.jp-tok.watson-orchestrate.cloud.ibm.com"
-        )
+    # Simplify URL to remove instance IDs
+    new_content = re.sub(
+        r'(ORCHESTRATOR_BASE_URL=https://api\.[a-z-]+\.watson-orchestrate\.cloud\.ibm\.com)/instances/[a-f0-9\-]+',
+        r'\1',
+        new_content
+    )
     
     # Write back
     with open(env_path, 'w') as f:
@@ -58,7 +66,7 @@ def fix_ibm_401():
     
     print("✅ Updated .env:")
     print("  ✓ ORCHESTRATOR_API_KEY → placeholder value (local orchestrator)")
-    print("  ✓ ORCHESTRATOR_BASE_URL → simplified URL")
+    print("  ✓ ORCHESTRATOR_BASE_URL → simplified URL (instance ID removed)")
     print()
     
     print("=" * 70)

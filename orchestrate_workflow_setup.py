@@ -9,9 +9,16 @@ import requests
 import json
 import yaml
 from pathlib import Path
+from dotenv import load_dotenv
 
-IAM_URL = "https://iam.cloud.ibm.com/identity/token"
-ORCHESTRATE_API_URL = "https://api.jp-tok.watson-orchestrate.cloud.ibm.com/instances/0b4a8b3e-ac8a-4ee1-be2e-ac89c2a6a1e4/v1"
+# Load environment variables
+load_dotenv()
+
+IAM_URL = os.getenv("IBM_IAM_URL", "https://iam.cloud.ibm.com/identity/token")
+ORCHESTRATE_API_URL = os.getenv(
+    "ORCHESTRATE_API_URL",
+    "https://api.jp-tok.watson-orchestrate.cloud.ibm.com/instances/default/v1"
+)
 
 def get_iam_token(api_key):
     """Get IAM token from API key"""

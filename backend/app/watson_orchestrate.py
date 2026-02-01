@@ -9,6 +9,10 @@ import json
 from typing import Dict, Any, Optional, List
 import logging
 from functools import lru_cache
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -28,14 +32,20 @@ class WatsonOrchestrateClient:
     
     def __init__(self):
         self.api_key = os.getenv("WATSON_ORCHESTRATE_API_KEY")
-        self.instance_id = "0b4a8b3e-ac8a-4ee1-be2e-ac89c2a6a1e4"
-        self.region = "jp-tok"
-        self.base_url = f"https://api.{self.region}.watson-orchestrate.cloud.ibm.com/instances/{self.instance_id}"
-        self.iam_url = "https://iam.cloud.ibm.com/identity/token"
+        self.instance_id = os.getenv("WATSON_INSTANCE_ID", "")
+        self.region = os.getenv("WATSON_REGION", "us-south")
+        self.base_url = os.getenv(
+            "WATSON_ORCHESTRATE_BASE_URL",
+            f"https://api.{self.region}.watson-orchestrate.cloud.ibm.com/instances/{self.instance_id}"
+        )
+        self.iam_url = os.getenv("IBM_IAM_URL", "https://iam.cloud.ibm.com/identity/token")
         self.iam_token = None
         
         if not self.api_key:
             raise ValueError("WATSON_ORCHESTRATE_API_KEY not set in environment")
+        
+        if not self.instance_id and "instances/" not in self.base_url:
+            raise ValueError("WATSON_INSTANCE_ID or WATSON_ORCHESTRATE_BASE_URL must be set in environment")
         
         self._get_iam_token()
         logger.info("✅ Watson Orchestrate Client Initialized")

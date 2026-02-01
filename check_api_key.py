@@ -7,10 +7,14 @@ import os
 import sys
 import requests
 import json
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 def get_iam_token(api_key):
     """Get IAM token from API key"""
-    url = "https://iam.cloud.ibm.com/identity/token"
+    url = os.getenv("IBM_IAM_URL", "https://iam.cloud.ibm.com/identity/token")
     
     headers = {
         "Content-type": "application/x-www-form-urlencoded",
@@ -52,10 +56,12 @@ def check_api_key():
     
     if not api_key:
         print("❌ No API key found!")
-        print("\nTo set your API key, run:")
-        print("  export WATSON_ORCHESTRATE_API_KEY='OppiS4ojVge4xPtJF8G6fulSF-VqgPM6R9vilzCPazCo'\n")
+        print("\nTo set your API key, create/update your .env file:")
+        print("  WATSON_ORCHESTRATE_API_KEY=<your-api-key-from-ibm-cloud>")
+        print("\nOr set it in your shell session:")
+        print("  export WATSON_ORCHESTRATE_API_KEY='<your-api-key>'\n")
         print("Then verify it:")
-        print("  python3 check_api_key_fixed.py\n")
+        print("  python3 check_api_key.py\n")
         return False
     
     print(f"✅ Found API key: {api_key[:10]}...{api_key[-4:]}\n")
@@ -74,7 +80,15 @@ def check_api_key():
     }
     
     # Use the correct instance URL from your credentials
-    base_url = "https://api.jp-tok.watson-orchestrate.cloud.ibm.com/instances/0b4a8b3e-ac8a-4ee1-be2e-ac89c2a6a1e4/v1"
+    base_url = os.getenv("WATSON_ORCHESTRATE_BASE_URL")
+    
+    if not base_url:
+        print("⚠️  WATSON_ORCHESTRATE_BASE_URL not set in environment")
+        print("   Please set it in your .env file")
+        return False
+    
+    if not base_url.endswith("/v1"):
+        base_url = f"{base_url}/v1"
     
     endpoints = [
         ("Agents", f"{base_url}/agents"),
@@ -120,7 +134,6 @@ def check_api_key():
     if valid:
         print("✅ API Key is VALID!")
         print("\nYou can now import agents:")
-        print("  export WATSON_ORCHESTRATE_API_KEY='OppiS4ojVge4xPtJF8G6fulSF-VqgPM6R9vilzCPazCo'")
         print("  python3 import_agents_via_api.py\n")
         return True
     else:

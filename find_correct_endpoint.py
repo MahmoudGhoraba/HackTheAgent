@@ -6,10 +6,14 @@ Find the correct Watson Orchestrate API endpoint for agents
 import os
 import requests
 import json
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 def get_iam_token(api_key):
     """Get IAM token from API key"""
-    url = "https://iam.cloud.ibm.com/identity/token"
+    url = os.getenv("IBM_IAM_URL", "https://iam.cloud.ibm.com/identity/token")
     headers = {
         "Content-type": "application/x-www-form-urlencoded",
         "Accept": "application/json"
@@ -31,6 +35,7 @@ def test_endpoints():
     api_key = os.environ.get("WATSON_ORCHESTRATE_API_KEY")
     if not api_key:
         print("❌ No API key found!")
+        print("Set WATSON_ORCHESTRATE_API_KEY environment variable")
         return
     
     print("\n" + "="*60)
@@ -47,7 +52,10 @@ def test_endpoints():
         "Content-Type": "application/json"
     }
     
-    base_url = "https://api.jp-tok.watson-orchestrate.cloud.ibm.com/instances/0b4a8b3e-ac8a-4ee1-be2e-ac89c2a6a1e4"
+    base_url = os.getenv("WATSON_ORCHESTRATE_BASE_URL")
+    if not base_url:
+        print("❌ WATSON_ORCHESTRATE_BASE_URL environment variable not set")
+        return
     
     # Test different endpoint variations
     endpoints = [
@@ -57,7 +65,7 @@ def test_endpoints():
         ("With /workflows/email_analysis/agents", f"{base_url}/workflows/email_analysis/agents"),
         ("Base URL check", f"{base_url}"),
         ("Base URL with /v1", f"{base_url}/v1"),
-        ("Root endpoint", "https://api.jp-tok.watson-orchestrate.cloud.ibm.com"),
+        ("Root endpoint", os.getenv("IBM_API_ROOT", "https://api.watson-orchestrate.cloud.ibm.com")),
     ]
     
     print("Testing endpoints...\n")
