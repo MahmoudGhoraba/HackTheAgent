@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: Threat Scorer Tool
+  description: Calculates overall threat score for emails
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Threat Scorer API
+paths:
+  /score_threat:
+    post:
+      summary: Score overall threat
+      description: Calculate threat score from multiple indicators
+      operationId: score_threat
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                phishing_score:
+                  type: number
+                domain_trust_score:
+                  type: number
+                content_risk_indicators:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - phishing_score
+                - domain_trust_score
+      responses:
+        '200':
+          description: Threat scoring completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  threat_score:
+                    type: number
+                    description: Overall threat score (0-1)
+                  threat_level:
+                    type: string
+                  recommendation:
+                    type: string
+                  details:
+                    type: object

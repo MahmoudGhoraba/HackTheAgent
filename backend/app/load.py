@@ -66,7 +66,7 @@ def load_emails_from_file() -> EmailsResponse:
 
 def load_emails_from_gmail(max_results: int = 100, query: str = "") -> EmailsResponse:
     """
-    Load emails from Gmail using OAuth
+    Load emails from Gmail using OAuth and persist to database
     
     Args:
         max_results: Maximum number of emails to fetch
@@ -79,6 +79,7 @@ def load_emails_from_gmail(max_results: int = 100, query: str = "") -> EmailsRes
         ValueError: If Gmail not authenticated
     """
     from app.gmail_oauth import gmail_service
+    from app.database import get_database
     
     if not gmail_service.is_authenticated():
         raise ValueError(
@@ -89,8 +90,10 @@ def load_emails_from_gmail(max_results: int = 100, query: str = "") -> EmailsRes
         # Fetch emails from Gmail
         gmail_emails = gmail_service.fetch_emails(max_results=max_results, query=query)
         
-        # Convert Gmail format to RawEmail format
+        # Convert Gmail format to RawEmail format and persist
         raw_emails = []
+        db = get_database()
+        
         for email in gmail_emails:
             raw_email = RawEmail(
                 id=email['id'],
@@ -101,6 +104,18 @@ def load_emails_from_gmail(max_results: int = 100, query: str = "") -> EmailsRes
                 body=email['body']
             )
             raw_emails.append(raw_email)
+            
+            # Persist email to SQLite database (Fix #4)
+            db.store_email({
+                'email_id': email['id'],
+                'subject': email['subject'],
+                'from': email['from'],
+                'to': email['to'],
+                'date': email['date'],
+                'body': email['body'],
+                'source': 'gmail',
+                'timestamp': Path(__file__).resolve().parent.parent.parent / 'data'  # Using current time
+            })
         
         return EmailsResponse(emails=raw_emails)
     

@@ -1,0 +1,34 @@
+spec_version: v1
+kind: native
+name: classification_agent
+display_name: Classification Agent
+description: |
+  Classifies emails by category, priority, and sentiment.
+  Organizes email workflows with intelligent categorization and analysis.
+instructions: |
+  You are an Email Classification Agent specialized in organizing and categorizing emails.
+  
+  Your responsibilities:
+  1. Classify emails into categories (Work, Personal, Financial, Legal, etc.)
+  2. Detect email priority levels (High, Medium, Low, Urgent)
+  3. Analyze email sentiment (Positive, Neutral, Negative)
+  4. Apply business rules for classification
+  5. Provide confidence scores for each classification
+  
+  Use advanced NLP and machine learning to accurately categorize and analyze emails at scale.
+  
+  Available tools:
+  - category_classifier: Classify emails into predefined categories
+  - priority_detector: Detect email priority level
+  - sentiment_analyzer: Analyze email sentiment and emotion
+
+style: default
+llm: watsonx/ibm/granite-3-8b-instruct
+tools:
+  - category_classifier
+  - priority_detector
+  - sentiment_analyzer
+collaborators: []
+hide_reasoning: false
+restrictions: editable
+icon: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#33A1DE"/><path d="M44 20H20c-2.2 0-4 1.8-4 4v24c0 2.2 1.8 4 4 4h24c2.2 0 4-1.8 4-4V24c0-2.2-1.8-4-4-4zm0 6l-12 9-12-9v-2h24v2z" fill="white"/></svg>'

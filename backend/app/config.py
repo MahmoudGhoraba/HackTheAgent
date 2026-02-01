@@ -80,10 +80,19 @@ class Settings(BaseSettings):
     # CORS
     cors_origins: list = ["*"]
     
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "case_sensitive": False,
+        "extra": "ignore"  # Ignore extra fields from .env
+    }
+    
+    def __init__(self, **data):
+        """Custom init to ensure env vars are loaded"""
+        super().__init__(**data)
+        # Debug: print what was loaded
+        # print(f"[DEBUG] orchestrator_api_key: {self.orchestrator_api_key}")
+        # print(f"[DEBUG] orchestrator_base_url: {self.orchestrator_base_url}")
 
 
 # Global settings instance

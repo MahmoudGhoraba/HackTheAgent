@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: Phishing Detector Tool
+  description: Detects phishing attempts in emails
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Phishing Detector API
+paths:
+  /detect_phishing:
+    post:
+      summary: Detect phishing email
+      description: Analyze email for phishing indicators
+      operationId: detect_phishing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_content:
+                  type: string
+                  description: The email body
+                sender_address:
+                  type: string
+                  description: Email sender address
+                subject:
+                  type: string
+                  description: Email subject line
+              required:
+                - email_content
+                - sender_address
+      responses:
+        '200':
+          description: Phishing detection completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  is_phishing:
+                    type: boolean
+                  phishing_score:
+                    type: number
+                    description: Score from 0 (safe) to 1 (phishing)
+                  indicators:
+                    type: array
+                    items:
+                      type: string

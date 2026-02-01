@@ -9,3 +9,9 @@ google-api-python-client
 pydantic
 pytest
 pytest-asyncio
+ibm-watson
+ibm-cloud-sdk-core
+httpx
+sentence-transformers
+chromadb
+sqlalchemy

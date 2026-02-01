@@ -3,6 +3,7 @@ IBM Orchestrate-inspired Multi-Agent Workflow Orchestration
 Coordinates semantic search, classification, and RAG agents
 """
 import logging
+import asyncio
 from typing import List, Dict, Optional, Any
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
@@ -13,8 +14,20 @@ from app.semantic import get_search_engine
 from app.classify import classifier
 from app.rag import get_rag_engine
 from app.config import settings
+from app.threat_detection import get_threat_detector, EmailThreatAnalysis
+from app.database import get_database
+
+# Try to import IBM Orchestrate client (optional)
+try:
+    from app.ibm_orchestrate import IBMOrchestrateClient, OrchestrateWorkflowInput, OrchestrateWorkflowOutput
+    IBM_ORCHESTRATE_AVAILABLE = True
+except ImportError:
+    IBM_ORCHESTRATE_AVAILABLE = False
 
 logger = logging.getLogger(__name__)
+
+if not IBM_ORCHESTRATE_AVAILABLE:
+    logger.info("IBM Orchestrate optional module not available - using local orchestrator")
 
 
 class WorkflowStatus(str, Enum):
@@ -95,6 +108,8 @@ class MultiAgentOrchestrator:
         """
         Execute the full multi-agent workflow
         
+        Try IBM Orchestrate first if configured, fallback to local orchestration
+        
         Args:
             query: User's question or intent
             top_k: Number of top results to return
@@ -102,6 +117,96 @@ class MultiAgentOrchestrator:
             
         Returns:
             WorkflowExecution: Complete workflow execution record with all steps
+        """
+        # Try IBM Orchestrate if available and properly configured (Fix #1)
+        # Skip if it's a placeholder value or not a valid API key
+        is_valid_orchestrator_key = (
+            IBM_ORCHESTRATE_AVAILABLE 
+            and settings.orchestrator_api_key 
+            and not settings.orchestrator_api_key.startswith("your-")
+            and len(settings.orchestrator_api_key) > 10
+        )
+        
+        if is_valid_orchestrator_key:
+            try:
+                logger.info(f"Attempting IBM Orchestrate execution with URL: {settings.orchestrator_base_url}")
+                result = await self._execute_ibm_orchestrate(query, top_k, enable_rag)
+                if result:
+                    logger.info("IBM Orchestrate execution successful")
+                    return result
+            except Exception as e:
+                error_msg = str(e)
+                logger.warning(f"IBM Orchestrate failed: {error_msg}")
+                
+                # Log helpful diagnostic info
+                if "401" in error_msg or "Unauthorized" in error_msg:
+                    logger.error("IBM Orchestrate returned 401 Unauthorized")
+                    logger.error(f"  API Key: {settings.orchestrator_api_key[:20]}..." if settings.orchestrator_api_key else "  API Key: Not set")
+                    logger.error(f"  Base URL: {settings.orchestrator_base_url}")
+                    logger.error("  Check: 1) API key is correct and not expired")
+                    logger.error("         2) Base URL matches your IBM instance")
+                    logger.error("         3) Credentials have required permissions")
+                
+                logger.warning("Falling back to local orchestrator")
+        else:
+            if IBM_ORCHESTRATE_AVAILABLE and settings.orchestrator_api_key:
+                logger.debug("IBM Orchestrate API key is placeholder, using local orchestrator")
+        
+        # Fallback to local multi-agent orchestration
+        return await self._execute_local_workflow(query, top_k, enable_rag)
+    
+    async def _execute_ibm_orchestrate(
+        self,
+        query: str,
+        top_k: int,
+        enable_rag: bool
+    ) -> Optional[WorkflowExecution]:
+        """
+        Execute using IBM Orchestrate (if configured)
+        """
+        try:
+            from app.ibm_orchestrate import get_orchestrate_client
+            
+            client = get_orchestrate_client()
+            input_data = OrchestrateWorkflowInput(
+                user_query=query,
+                email_ids=[],  # Will be populated by workflow
+                num_results=top_k
+            )
+            
+            # Call IBM Orchestrate workflow
+            result = await client.execute_workflow(
+                workflow_id="email_analysis",
+                input_data=input_data
+            )
+            
+            # Convert to our WorkflowExecution format
+            self.execution_counter += 1
+            execution = WorkflowExecution(
+                execution_id=f"ibm_{result.execution_id}",
+                intent=query,
+                status=WorkflowStatus.COMPLETED if result.status == "COMPLETED" else WorkflowStatus.ERROR,
+                result=result.result,
+                end_time=datetime.utcnow().isoformat(),
+                duration_ms=1000  # IBM Orchestrate timing not available
+            )
+            
+            logger.info(f"IBM Orchestrate execution completed: {result.execution_id}")
+            self.executions[execution.execution_id] = execution
+            return execution
+            
+        except Exception as e:
+            logger.error(f"IBM Orchestrate error: {str(e)}")
+            return None
+    
+    async def _execute_local_workflow(
+        self,
+        query: str,
+        top_k: int = 5,
+        enable_rag: bool = True
+    ) -> WorkflowExecution:
+        """
+        Local multi-agent orchestration (fallback if IBM Orchestrate not available)
         """
         self.execution_counter += 1
         execution_id = f"exec_{self.execution_counter}"
@@ -136,30 +241,52 @@ class MultiAgentOrchestrator:
                 return execution
             
             # Step 3: Classification Agent (for priority/categorization)
-            logger.info(f"[{execution_id}] Running classification agent")
-            classify_step = await self._step_classification(execution)
-            execution.steps.append(classify_step)
-            
             # Step 4: RAG Agent (if enabled)
-            if enable_rag:
-                logger.info(f"[{execution_id}] Running RAG answer generation agent")
-                rag_step = await self._step_rag_generation(execution, query, top_k)
+            # Run in parallel for better performance (Fix #5)
+            logger.info(f"[{execution_id}] Running classification and RAG agents in parallel")
+            
+            classify_coro = self._step_classification(execution)
+            rag_coro = self._step_rag_generation(execution, query, top_k) if enable_rag else None
+            
+            # Run both concurrently
+            if rag_coro:
+                classify_step, rag_step = await asyncio.gather(
+                    classify_coro,
+                    rag_coro,
+                    return_exceptions=True
+                )
+            else:
+                classify_step = await classify_coro
+                rag_step = None
+            
+            execution.steps.append(classify_step)
+            if rag_step:
                 execution.steps.append(rag_step)
-                
-                # Extract answer from RAG step
-                if rag_step.status == WorkflowStatus.COMPLETED:
-                    rag_result = rag_step.metadata.get('answer')
-                    citations = rag_step.metadata.get('citations', [])
-                    execution.result = {
-                        'answer': rag_result,
-                        'citations': citations,
-                        'search_results': search_step.metadata.get('results', [])
-                    }
+            
+            # Build result from parallel steps
+            if enable_rag and rag_step and rag_step.status == WorkflowStatus.COMPLETED:
+                rag_result = rag_step.metadata.get('answer')
+                citations = rag_step.metadata.get('citations', [])
+                execution.result = {
+                    'answer': rag_result,
+                    'citations': citations,
+                    'search_results': search_step.metadata.get('results', [])
+                }
             else:
                 # Just return search results
                 execution.result = {
                     'search_results': search_step.metadata.get('results', [])
                 }
+            
+            # Step 5: Threat Detection Agent (NEW - #2 Fix)
+            logger.info(f"[{execution_id}] Running threat detection agent")
+            threat_step = await self._step_threat_detection(execution, search_step)
+            execution.steps.append(threat_step)
+            
+            # Step 6: Database Persistence Agent (NEW - #3 Fix)
+            logger.info(f"[{execution_id}] Persisting workflow results to database")
+            persist_step = await self._step_database_persistence(execution)
+            execution.steps.append(persist_step)
             
             execution.status = WorkflowStatus.COMPLETED
             execution.end_time = datetime.utcnow().isoformat()
@@ -406,6 +533,121 @@ class MultiAgentOrchestrator:
             
         except Exception as e:
             logger.error(f"RAG generation error: {str(e)}")
+            step.status = WorkflowStatus.ERROR
+            step.error = str(e)
+        
+        return step
+    
+    async def _step_threat_detection(
+        self,
+        execution: WorkflowExecution,
+        search_step: WorkflowStep
+    ) -> WorkflowStep:
+        """
+        Threat Detection Agent (NEW)
+        Analyzes retrieved emails for security threats
+        """
+        step = WorkflowStep(
+            step_id="step_5_threat",
+            agent="Threat Detection Agent",
+            description="Scanning emails for phishing, spoofing, and security threats"
+        )
+        
+        try:
+            step.status = WorkflowStatus.RUNNING
+            threat_detector = get_threat_detector()
+            
+            search_results = search_step.metadata.get('results', [])
+            threats_found = []
+            threat_counts = {"SAFE": 0, "CAUTION": 0, "WARNING": 0, "CRITICAL": 0}
+            
+            # Analyze each search result for threats
+            for email in search_results[:5]:  # Analyze top 5 results
+                threat_analysis = threat_detector.analyze({
+                    'id': email.get('id'),
+                    'subject': email.get('subject', ''),
+                    'body': email.get('snippet', ''),
+                    'from': email.get('from', '')
+                })
+                
+                threat_counts[threat_analysis.threat_level] += 1
+                
+                if threat_analysis.threat_level in ["WARNING", "CRITICAL"]:
+                    threats_found.append({
+                        'email_id': threat_analysis.email_id,
+                        'threat_level': threat_analysis.threat_level,
+                        'threat_score': threat_analysis.threat_score,
+                        'recommendation': threat_analysis.recommendation
+                    })
+            
+            step.metadata = {
+                'threats_detected': len(threats_found),
+                'threat_summary': threat_counts,
+                'critical_threats': threats_found
+            }
+            step.result = f"Analyzed {len(search_results[:5])} emails - {threat_counts['CRITICAL']} critical, {threat_counts['WARNING']} warnings"
+            step.status = WorkflowStatus.COMPLETED
+            
+            logger.info(f"Threat detection: {threat_counts['CRITICAL']} critical, {threat_counts['WARNING']} warnings found")
+            
+        except Exception as e:
+            logger.error(f"Threat detection error: {str(e)}")
+            step.status = WorkflowStatus.ERROR
+            step.error = str(e)
+        
+        return step
+    
+    async def _step_database_persistence(
+        self,
+        execution: WorkflowExecution
+    ) -> WorkflowStep:
+        """
+        Database Persistence Agent (NEW)
+        Stores workflow results and threat analysis in SQLite
+        """
+        step = WorkflowStep(
+            step_id="step_6_persist",
+            agent="Database Persistence Agent",
+            description="Storing workflow execution and threat analysis in database"
+        )
+        
+        try:
+            step.status = WorkflowStatus.RUNNING
+            db = get_database()
+            
+            # Store workflow execution
+            db.store_workflow_execution({
+                'workflow_id': execution.execution_id,
+                'status': execution.status.value,
+                'intent': execution.intent,
+                'steps': len(execution.steps),
+                'result': str(execution.result),
+                'timestamp': datetime.utcnow().isoformat()
+            })
+            
+            # Store threat analysis from threat detection step
+            threat_step = next((s for s in execution.steps if s.step_id == "step_5_threat"), None)
+            if threat_step and threat_step.metadata.get('critical_threats'):
+                for threat in threat_step.metadata['critical_threats']:
+                    db.store_threat_analysis({
+                        'email_id': threat['email_id'],
+                        'threat_level': threat['threat_level'],
+                        'threat_score': threat['threat_score'],
+                        'recommendation': threat['recommendation'],
+                        'timestamp': datetime.utcnow().isoformat()
+                    })
+            
+            step.metadata = {
+                'execution_stored': True,
+                'threats_stored': len(threat_step.metadata.get('critical_threats', []) if threat_step else [])
+            }
+            step.result = "Workflow and threat analysis persisted to database"
+            step.status = WorkflowStatus.COMPLETED
+            
+            logger.info(f"Workflow {execution.execution_id} persisted to database")
+            
+        except Exception as e:
+            logger.error(f"Database persistence error: {str(e)}")
             step.status = WorkflowStatus.ERROR
             step.error = str(e)
         

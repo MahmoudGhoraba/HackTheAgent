@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: Answer Generator Tool
+  description: Generates answers using context and LLM
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Answer Generator API
+paths:
+  /generate_answer:
+    post:
+      summary: Generate grounded answer
+      description: Create answer based on question and context
+      operationId: generate_answer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                  description: The question to answer
+                context:
+                  type: array
+                  items:
+                    type: string
+                  description: Relevant context passages
+              required:
+                - question
+                - context
+      responses:
+        '200':
+          description: Answer generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: string
+                  confidence:
+                    type: number
+                  based_on_count:
+                    type: integer

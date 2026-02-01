@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  title: Entity Extractor Tool
+  description: Extracts named entities from text
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Entity Extractor API
+paths:
+  /extract_entities:
+    post:
+      summary: Extract named entities
+      description: Identify dates, names, topics, and other relevant entities
+      operationId: extract_entities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: The text to extract entities from
+              required:
+                - text
+      responses:
+        '200':
+          description: Entities extracted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  entities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        entity:
+                          type: string
+                        entity_type:
+                          type: string
+                        confidence:
+                          type: number

@@ -1,0 +1,36 @@
+spec_version: v1
+kind: native
+name: database_persistence_agent
+display_name: Database Persistence Agent
+description: |
+  Stores workflow execution results and threat analysis to database.
+  Provides analytics and historical tracking of email analysis workflows.
+instructions: |
+  You are a Data Persistence Agent responsible for storing and tracking analysis results.
+  
+  Your responsibilities:
+  1. Store workflow execution records with results
+  2. Persist threat analysis findings to secure storage
+  3. Log analytics events for reporting
+  4. Track performance metrics
+  5. Maintain audit trails
+  6. Provide data retrieval capabilities
+  
+  Ensure all data is stored securely and is available for historical analysis and reporting.
+  Maintain data integrity and consistency across all storage operations.
+  
+  Available tools:
+  - execution_storage: Store workflow execution records
+  - threat_storage: Store threat analysis results
+  - analytics_logger: Log analytics events
+
+style: default
+llm: watsonx/ibm/granite-3-8b-instruct
+tools:
+  - execution_storage
+  - threat_storage
+  - analytics_logger
+collaborators: []
+hide_reasoning: false
+restrictions: editable
+icon: '<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" rx="8" fill="#24A148"/><path d="M44 16H20c-2.21 0-4 1.79-4 4v28c0 2.21 1.79 4 4 4h24c2.21 0 4-1.79 4-4V20c0-2.21-1.79-4-4-4zm-12 24h-4v-8h4v8zm8 0h-4v-12h4v12zm8 0h-4v-4h4v4z" fill="white"/></svg>'

@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 import logging
 from typing import Dict, Optional
+from datetime import datetime
 
 from app.config import settings
 from app.schemas import (
@@ -27,6 +28,8 @@ from app.analytics import email_analytics, search_analytics
 from app.cache import cache
 from app.gmail_oauth import gmail_service
 from app.orchestrator import get_orchestrator, WorkflowExecution
+from app.ibm_orchestrate import orchestrate_all_agents, get_agent_orchestration_status
+from app.agent_registry_sdk import register_all_agents, get_agent_registry, get_hacktheagent_agents
 from app.threat_endpoints import register_threat_detection_endpoints
 
 # Configure logging
@@ -382,6 +385,316 @@ async def get_recent_workflows(limit: int = Query(10, ge=1, le=100)):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to retrieve workflows: {str(e)}"
+        )
+
+
+# ==================== IBM ORCHESTRATE INTEGRATION ====================
+
+@app.post(
+    "/orchestrate/agents/execute",
+    tags=["IBM Orchestrate"],
+    summary="Execute all agents through IBM Orchestrate",
+    description="Orchestrates all 6 agents through IBM Orchestrate platform"
+)
+async def execute_agents_via_orchestrate(request: RAGRequest):
+    """
+    Execute all agents through IBM Orchestrate orchestration platform.
+    
+    This shows all 6 agents (Intent Detection, Semantic Search, Classification,
+    RAG Generation, Threat Detection, Database Persistence) being orchestrated
+    through IBM Orchestrate as if using the enterprise platform.
+    
+    Agents executed:
+    1. Intent Detection Agent - Parse user query and extract intent
+    2. Semantic Search Agent - Search emails by meaning
+    3. Classification Agent - Categorize and prioritize results
+    4. RAG Generation Agent - Generate grounded answers with citations
+    5. Threat Detection Agent - Analyze emails for security threats
+    6. Database Persistence Agent - Store workflow results
+    
+    Args:
+        request: Query with question and top_k results
+        
+    Returns:
+        Complete orchestration execution with all agent results
+    """
+    try:
+        logger.info(f"Executing agents through IBM Orchestrate for: '{request.question}'")
+        
+        # Execute all agents through IBM Orchestrate
+        execution = await orchestrate_all_agents(
+            user_query=request.question,
+            top_k=request.top_k
+        )
+        
+        logger.info(f"IBM Orchestrate execution completed: {execution.execution_id}")
+        
+        return {
+            "execution_id": execution.execution_id,
+            "workflow_id": execution.workflow_id,
+            "orchestration_id": execution.orchestration_id,
+            "status": execution.status,
+            "agents_count": len(execution.agents),
+            "agents": [
+                {
+                    "agent_id": agent.agent_id,
+                    "agent_type": agent.agent_type.value,
+                    "agent_name": agent.agent_name,
+                    "status": agent.status,
+                    "duration_ms": agent.duration_ms,
+                    "output": agent.output_data
+                } for agent in execution.agents
+            ],
+            "start_time": execution.start_time,
+            "end_time": execution.end_time,
+            "duration_ms": execution.duration_ms,
+            "error": execution.error
+        }
+    except Exception as e:
+        logger.error(f"Error executing agents via Orchestrate: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"IBM Orchestrate agent execution failed: {str(e)}"
+        )
+
+
+@app.get(
+    "/orchestrate/agents/status/{execution_id}",
+    tags=["IBM Orchestrate"],
+    summary="Get IBM Orchestrate agent execution status",
+    description="Retrieves status and results of agent orchestration"
+)
+async def get_orchestrate_agent_status(execution_id: str):
+    """
+    Get status of orchestrated agent execution from IBM Orchestrate
+    
+    Args:
+        execution_id: The orchestration execution ID
+        
+    Returns:
+        Status and results of agent orchestration
+    """
+    try:
+        status_info = await get_agent_orchestration_status(execution_id)
+        return status_info
+    except Exception as e:
+        logger.error(f"Error retrieving orchestrate status: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to retrieve orchestration status: {str(e)}"
+        )
+
+
+# ==================== AGENT REGISTRATION ====================
+
+@app.post(
+    "/orchestrate/agents/register",
+    tags=["Agent Registration"],
+    summary="Register all agents with IBM Orchestrate",
+    description="Exports all local HackTheAgent agents to IBM Orchestrate platform"
+)
+async def register_agents_endpoint():
+    """
+    Register all 6 HackTheAgent agents with IBM Orchestrate
+    
+    This makes all agents visible and available in the Orchestrate platform:
+    1. Intent Detection Agent
+    2. Semantic Search Agent
+    3. Classification Agent
+    4. RAG Answer Generation Agent
+    5. Threat Detection Agent
+    6. Database Persistence Agent
+    
+    Each agent is registered with:
+    - Full capability definitions
+    - Tool descriptions
+    - Input/output schemas
+    - Endpoint configurations
+    
+    Returns:
+        Registration status and results
+    """
+    try:
+        logger.info("Starting agent registration with IBM Orchestrate...")
+        
+        result = await register_all_agents()
+        
+        # Check if registration had errors
+        if "error" in result:
+            logger.error(f"Agent registration error: {result.get('error')}")
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=f"IBM Orchestrate registration failed: {result.get('error')}"
+            )
+        
+        logger.info(f"Agent registration completed: {result}")
+        
+        return {
+            "status": "success",
+            "message": "All agents registered successfully",
+            "agents_registered": 6,
+            "agents": [
+                "Intent Detection Agent",
+                "Semantic Search Agent",
+                "Classification Agent",
+                "RAG Answer Generation Agent",
+                "Threat Detection Agent",
+                "Database Persistence Agent"
+            ],
+            "details": result,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error registering agents: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Agent registration failed: {str(e)}"
+        )
+
+
+@app.get(
+    "/orchestrate/agents/list",
+    tags=["Agent Registration"],
+    summary="List agents in IBM Orchestrate",
+    description="Lists all agents registered in the IBM Orchestrate platform"
+)
+async def list_orchestrate_agents():
+    """
+    List all agents registered in IBM Orchestrate
+    
+    Returns:
+        List of registered agents with their definitions
+    """
+    try:
+        registry = get_agent_registry()
+        
+        if not registry:
+            return {
+                "status": "not_configured",
+                "message": "Orchestrator not configured",
+                "agents": []
+            }
+        
+        agents = await registry.list_registered_agents()
+        
+        return {
+            "status": "success",
+            "agents_count": len(agents),
+            "agents": agents,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error listing agents: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to list agents: {str(e)}"
+        )
+
+
+@app.get(
+    "/orchestrate/agents/definitions",
+    tags=["Agent Registration"],
+    summary="Get agent definitions",
+    description="Returns definitions of all HackTheAgent agents for export"
+)
+async def get_agent_definitions():
+    """
+    Get definitions of all HackTheAgent agents
+    
+    Useful for exporting agent definitions to external systems
+    
+    Returns:
+        Complete agent definitions with capabilities and tools
+    """
+    try:
+        agents = get_hacktheagent_agents()
+        
+        return {
+            "status": "success",
+            "agents_count": len(agents),
+            "agents": [
+                {
+                    "agent_id": agent.agent_id,
+                    "agent_name": agent.agent_name,
+                    "agent_type": agent.agent_type,
+                    "description": agent.description,
+                    "version": agent.version,
+                    "status": agent.status,
+                    "input_schema": agent.input_schema,
+                    "output_schema": agent.output_schema,
+                    "capabilities": [
+                        {
+                            "tool_id": cap.tool_id,
+                            "tool_name": cap.tool_name,
+                            "description": cap.description,
+                            "input_schema": cap.input_schema,
+                            "output_schema": cap.output_schema
+                        } for cap in agent.capabilities
+                    ],
+                    "endpoints": agent.endpoints
+                } for agent in agents
+            ],
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting agent definitions: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get agent definitions: {str(e)}"
+        )
+
+
+@app.get(
+    "/orchestrate/agents/{agent_id}",
+    tags=["Agent Registration"],
+    summary="Get agent details from Orchestrate",
+    description="Retrieves details of a specific agent from IBM Orchestrate"
+)
+async def get_orchestrate_agent(agent_id: str):
+    """
+    Get details of a specific agent from IBM Orchestrate
+    
+    Args:
+        agent_id: The agent ID to retrieve
+        
+    Returns:
+        Agent definition and details
+    """
+    try:
+        registry = get_agent_registry()
+        
+        if not registry:
+            return {
+                "status": "not_configured",
+                "message": "Orchestrator not configured"
+            }
+        
+        agent = await registry.get_agent(agent_id)
+        
+        if not agent:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Agent {agent_id} not found"
+            )
+        
+        return {
+            "status": "success",
+            "agent": agent,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting agent: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to get agent: {str(e)}"
         )
 
 

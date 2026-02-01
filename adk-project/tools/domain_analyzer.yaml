@@ -1,0 +1,48 @@
+openapi: 3.0.0
+info:
+  title: Domain Analyzer Tool
+  description: Analyzes sender domain reputation and authenticity
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Domain Analyzer API
+paths:
+  /analyze_domain:
+    post:
+      summary: Analyze domain
+      description: Check domain reputation and authentication
+      operationId: analyze_domain
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                domain:
+                  type: string
+                  description: Domain to analyze (e.g., example.com)
+                sender_email:
+                  type: string
+                  description: Full sender email address
+              required:
+                - domain
+      responses:
+        '200':
+          description: Domain analysis completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  domain:
+                    type: string
+                  trust_score:
+                    type: number
+                    description: Score from 0 (untrusted) to 1 (trusted)
+                  is_spoofed:
+                    type: boolean
+                  indicators:
+                    type: array
+                    items:
+                      type: string

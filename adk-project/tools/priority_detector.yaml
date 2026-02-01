@@ -1,0 +1,49 @@
+openapi: 3.0.0
+info:
+  title: Priority Detector Tool
+  description: Detects email priority levels
+  version: 1.0.0
+servers:
+  - url: https://api.example.com
+    description: Priority Detector API
+paths:
+  /detect_priority:
+    post:
+      summary: Detect email priority
+      description: Analyze email and determine priority level
+      operationId: detect_priority
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email_content:
+                  type: string
+                  description: The email content
+                subject:
+                  type: string
+                  description: Email subject line
+                sender:
+                  type: string
+                  description: Sender email address
+              required:
+                - email_content
+                - subject
+      responses:
+        '200':
+          description: Priority detection completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  priority:
+                    type: string
+                  confidence:
+                    type: number
+                  indicators:
+                    type: array
+                    items:
+                      type: string
