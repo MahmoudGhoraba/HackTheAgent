@@ -33,6 +33,7 @@ from app.agent_registry_sdk import register_all_agents, get_agent_registry, get_
 from app.threat_endpoints import register_threat_detection_endpoints
 from app.orchestrate_routes import router as orchestrate_router
 from app.watson_orchestrate import get_orchestrate_client
+from app.routes.workflow import router as workflow_router
 
 # Configure logging
 logging.basicConfig(
@@ -1148,6 +1149,9 @@ register_threat_detection_endpoints(app)
 
 # Register Watson Orchestrate routes
 app.include_router(orchestrate_router)
+
+# Register Workflow Execution routes (multi-agent orchestration)
+app.include_router(workflow_router)
 
 # Initialize Watson Orchestrate on startup
 @app.on_event("startup")
