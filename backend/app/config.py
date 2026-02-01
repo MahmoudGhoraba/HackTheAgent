@@ -63,6 +63,12 @@ class Settings(BaseSettings):
     ]
     gmail_token_file: str = "gmail_token.json"
     
+    # Outlook OAuth Settings (Microsoft Graph)
+    outlook_client_id: Optional[str] = None
+    outlook_client_secret: Optional[str] = None
+    outlook_tenant_id: str = "common"  # 'common' for multi-tenant, or specific tenant ID
+    outlook_redirect_uri: str = "http://localhost:8000/oauth/outlook/callback"
+    
     # Redis Cache (optional)
     redis_url: Optional[str] = None  # e.g., "redis://localhost:6379/0"
     cache_ttl: int = 300  # 5 minutes default
