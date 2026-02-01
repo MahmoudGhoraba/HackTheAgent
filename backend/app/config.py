@@ -51,6 +51,10 @@ class Settings(BaseSettings):
     watsonx_url: Optional[str] = "https://us-south.ml.cloud.ibm.com"
     openai_api_key: Optional[str] = None
     
+    # IBM Orchestrate Settings (Optional - for production)
+    orchestrator_api_key: Optional[str] = None
+    orchestrator_base_url: Optional[str] = "https://api.jp-tok.watson-orchestrate.cloud.ibm.com"
+    
     # Gmail OAuth Settings
     gmail_client_id: Optional[str] = None
     gmail_client_secret: Optional[str] = None

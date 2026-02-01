@@ -27,6 +27,7 @@ from app.analytics import email_analytics, search_analytics
 from app.cache import cache
 from app.gmail_oauth import gmail_service
 from app.orchestrator import get_orchestrator, WorkflowExecution
+from app.threat_endpoints import register_threat_detection_endpoints
 
 # Configure logging
 logging.basicConfig(
@@ -826,6 +827,14 @@ async def get_gmail_labels():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to clear search analytics: {str(e)}"
         )
+
+# Register threat detection endpoints (INNOVATION FEATURE)
+register_threat_detection_endpoints(app)
+
+logger.info("✅ HackTheAgent - Email Threat Detection System Ready")
+logger.info(f"📊 API Documentation: http://localhost:8000/docs")
+logger.info(f"🔐 Threat Detection: POST http://localhost:8000/security/threat-detection")
+
 
 if __name__ == "__main__":
     import uvicorn

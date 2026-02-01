@@ -10,6 +10,18 @@
 
 ---
 
+## 📋 FOR JUDGES: READ THIS FIRST
+
+👉 **[SUBMISSION.md](./SUBMISSION.md)** - Comprehensive project submission with honest assessment (14-15/20)
+
+**Quick Links:**
+- [HONEST_AUDIT.md](./HONEST_AUDIT.md) - Technical audit of implementation vs claims
+- [ARCHITECTURE.md](./ARCHITECTURE.md) - Deep dive into system design
+- [DEMO_SCRIPT.md](./DEMO_SCRIPT.md) - Try the system with sample queries
+- [API Documentation](http://localhost:8000/docs) - Interactive Swagger UI (when running)
+
+---
+
 ## 🎯 What Makes This Special?
 
 HackTheAgent transforms your inbox into **semantic memory** with an **intelligent AI agent interface**. Instead of keyword search, it understands **meaning**. Instead of reading dozens of emails, you ask questions in natural language and get **grounded answers with citations**.
